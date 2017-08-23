@@ -21,12 +21,38 @@ class VectorCreationTests(TestCase):
         self.assertEqual(vector._values, [2])
 
 
+    @patch("points.vectors.are_numeric")
+    def test_vector_values_must_be_numeric(self, mock_are):
+        mock_are.return_value = False
+        with self.assertRaises(TypeError):
+            vector = Vector([2, 5, 1])
+
+
 
 class VectorReprTests(TestCase):
 
     def test_vector_repr(self):
         vector = Vector(2, 5, 1)
         self.assertEqual(str(vector), "<Vector [2, 5, 1]>")
+
+
+
+class VectorContainerTests(TestCase):
+
+    def test_vector_is_container(self):
+        vector = Vector(2, 5, 1)
+        self.assertIn(5, vector)
+        self.assertNotIn(7, vector)
+
+
+
+class VectorIndexingGettingTests(TestCase):
+
+    def test_can_get_vector_index(self):
+        vector = Vector(2, 5, 1)
+        self.assertEqual(vector[0], 2)
+        self.assertEqual(vector[1], 5)
+        self.assertEqual(vector[2], 1)
 
 
 

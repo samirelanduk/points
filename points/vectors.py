@@ -1,26 +1,37 @@
 """Contains the Vector class."""
 
 from math import sqrt, acos, degrees
+from .checks import are_numeric
 
 class Vector:
     """A vector is a sequence of numbers. They can represent a point in space,
     or the attributes of an object.
 
     :param values: The numbers that make up the Vector. If a single sequence is
-    given, that sequence will be unpacked to make the vector."""
+    given, that sequence will be unpacked to make the vector.
+    :raises TypeError: if the values given are not numeric."""
 
     def __init__(self, *values):
+        values_ = values
         if len(values) == 1:
             try:
-                self._values = list(values[0])
-            except TypeError:
-                self._values = list(values)
-        else:
-            self._values = list(values)
+                values_ = list(values[0])
+            except TypeError: pass
+        if not are_numeric(*values_):
+            raise TypeError("{} contains non-numeric values".format(values_))
+        self._values = list(values_)
 
 
     def __repr__(self):
         return "<Vector {}>".format(self._values)
+
+
+    def __contains__(self, item):
+        return item in self._values
+
+
+    def __getitem__(self, index):
+        return self._values[index]
 
 
     def __len__(self):
@@ -65,7 +76,7 @@ class Vector:
         :param Vector other: The other Vector.
         :raises TypeError: If a non-Vector is given.
         :rtype: ``float``"""
-        
+
         if not isinstance(other, Vector):
             raise TypeError("{} is not a Vector".format(other))
         if self.length() != other.length():
