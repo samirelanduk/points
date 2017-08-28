@@ -64,6 +64,27 @@ class VectorLenTests(TestCase):
 
 
 
+class VectorAdditionTests(TestCase):
+
+    @patch("points.vectors.Vector.length")
+    def test_can_add_vectors(self, mock_length):
+        vector = Vector(2, 5, 1)
+        vector2 = Mock(Vector)
+        mock_length.return_value = 3
+        vector2.length.return_value = 3
+        vector2._values = [1, 2, 3]
+        vector3 = vector + vector2
+        self.assertIsInstance(vector3, Vector)
+        self.assertEqual(vector3._values, [3, 7, 4])
+
+
+    def test_can_only_add_vectors(self):
+        vector = Vector(2, 5, 1)
+        with self.assertRaises(TypeError):
+            vector + "vector"
+
+
+
 class VectorLengthTests(TestCase):
 
     @patch("points.vectors.Vector.__len__")

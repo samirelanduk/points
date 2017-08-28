@@ -38,6 +38,12 @@ class Vector:
         return len(self._values)
 
 
+    def __add__(self, other):
+        if not isinstance(other, Vector):
+            raise TypeError("Cannot add {} - not a Vector".format(other))
+        return Vector(v1 + v2 for v1, v2 in zip(self._values, other._values))
+
+
     def length(self):
         """Returns the length of the Vector. This is the number of values it
         contains, not its :py:meth:`magnitude`.
