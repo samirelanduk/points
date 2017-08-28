@@ -54,6 +54,17 @@ class Vector:
         return Vector(v1 - v2 for v1, v2 in zip(self._values, other._values))
 
 
+    def __mul__(self, other):
+        if isinstance(other, Vector):
+            raise TypeError("'*' is reserved for scalar multiplication")
+        else:
+            return Vector([v * other for v in self._values])
+
+
+    def __rmul__(self, other):
+        return self * other
+
+
     def length(self):
         """Returns the length of the Vector. This is the number of values it
         contains, not its :py:meth:`magnitude`.

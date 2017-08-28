@@ -128,6 +128,30 @@ class VectorSubtractionTests(TestCase):
 
 
 
+class VectorScalarMultiplicationTests(TestCase):
+
+    def test_can_multiply_vector_by_scalar(self):
+        vector = Vector(2, 5, 1)
+        vector2 = vector * 3
+        self.assertIsInstance(vector2, Vector)
+        self.assertEqual(vector2._values, [6, 15, 3])
+
+
+    def test_can_multiply_scalar_by_vector(self):
+        vector = Vector(2, 5, 1)
+        vector2 = 3 * vector
+        self.assertIsInstance(vector2, Vector)
+        self.assertEqual(vector2._values, [6, 15, 3])
+
+
+    def test_only_scalar_multiplication_allowed(self):
+        vector = Vector(2, 5, 1)
+        with self.assertRaises(TypeError):
+            vector * Mock(Vector)
+
+
+
+
 class VectorLengthTests(TestCase):
 
     @patch("points.vectors.Vector.__len__")
