@@ -32,39 +32,24 @@ class MatrixCreationTests(TestCase):
             Matrix([1, 2, 3], [4, 5])
 
 
+
+class MatrixReprTests(TestCase):
+
     def test_matrix_repr(self):
         matrix = Matrix((1, 2, 3), (4, 5, 6))
         self.assertEqual(str(matrix), "<Matrix (2×3)>")
 
 
 
-class MatrixRowsAndColumnsTests(TestCase):
-
-    def test_can_get_rows(self):
-        matrix = Matrix((1, 2, 3), (4, 5, 6))
-        self.assertEqual(matrix.rows(), ((1, 2, 3), (4, 5, 6)))
-
-
-    def test_can_get_columns(self):
-        matrix = Matrix((1, 2, 3), (4, 5, 6))
-        self.assertEqual(matrix.columns(), ((1, 4), (2, 5), (3, 6)))
-
-
-    def test_can_get_size(self):
-        matrix = Matrix((1, 2, 3), (4, 5, 6))
-        self.assertEqual(matrix.size(), (2, 3))
-
-
-
 class MatrixEquality(TestCase):
 
-    def test_equal_points_are_equal(self):
+    def test_equal_matrices_are_equal(self):
         matrix1 = Matrix((1, 2, 3), (4, 5, 6))
         matrix2 = Matrix((1, 2, 3), (4, 5, 6))
         self.assertEqual(matrix1, matrix2)
 
 
-    def test_unequal_points_are_not_equal(self):
+    def test_unequal_matrices_are_not_equal(self):
         matrix1 = Matrix((1, 2, 3), (4, 5, 6))
         matrix2 = Matrix((1, 2, 3), (4, 5.1, 6))
         self.assertNotEqual(matrix1, matrix2)
@@ -72,9 +57,35 @@ class MatrixEquality(TestCase):
 
 
 
+class MatrixRowsTests(TestCase):
+
+    def test_can_get_rows(self):
+        matrix = Matrix((1, 2, 3), (4, 5, 6))
+        self.assertEqual(matrix.rows(), ((1, 2, 3), (4, 5, 6)))
+
+
+
+class MatrixColumnsTests(TestCase):
+
+    def test_can_get_columns(self):
+        matrix = Matrix((1, 2, 3), (4, 5, 6))
+        self.assertEqual(matrix.columns(), ((1, 4), (2, 5), (3, 6)))
+
+
+
+class MatrixSizeTests(TestCase):
+
+    def test_can_get_size(self):
+        matrix = Matrix((1, 2, 3), (4, 5, 6))
+        self.assertEqual(matrix.size(), (2, 3))
+
+
+
 class MatrixAdditionTests(TestCase):
 
-    def test_can_add_points(self):
+    @patch("points.matrices.can_add")
+    def test_can_add_matrices(self, mock_check):
+        mock_check.return_value = True
         matrix1 = Matrix((1, 2, 3), (4, 5, 6))
         matrix2 = Matrix((1, 2, 3), (4, 5, 6))
         matrix3 = matrix1 + matrix2
@@ -90,7 +101,12 @@ class MatrixAdditionTests(TestCase):
             matrix1 + matrix2
 
 
-    def test_can_subtract_points(self):
+
+class MatrixSubtractionTests(TestCase):
+
+    @patch("points.matrices.can_add")
+    def test_can_subtract_matrices(self, mock_check):
+        mock_check.return_value = True
         matrix1 = Matrix((-1, 2, 0), (0, 3, 6))
         matrix2 = Matrix((0, -4, 3), (9, -4, -3))
         matrix3 = matrix1 - matrix2
@@ -98,7 +114,7 @@ class MatrixAdditionTests(TestCase):
 
 
     @patch("points.matrices.can_add")
-    def test_cannot_add_if_function_says_no(self, mock_check):
+    def test_cannot_subtract_if_function_says_no(self, mock_check):
         mock_check.return_value = False
         matrix1 = Matrix((-1, 2, 0), (0, 3, 6))
         matrix2 = Matrix((0, -4, 3), (9, -4, -3))
@@ -109,7 +125,9 @@ class MatrixAdditionTests(TestCase):
 
 class MatrixMultiplicationTests(TestCase):
 
-    def test_can_multiply_points(self):
+    @patch("points.matrices.can_multiply")
+    def test_can_multiply_matrices(self, mock_check):
+        mock_check.return_value = True
         matrix1 = Matrix((1, 2, 3), (4, 5, 6))
         matrix2 = Matrix((7, 8), (9, 10), (11, 12))
         matrix3 = matrix1 * matrix2
@@ -125,13 +143,17 @@ class MatrixMultiplicationTests(TestCase):
             matrix1 * matrix2
 
 
-    def test_matrix_multiplication_is_not_commutative(self):
+    @patch("points.matrices.can_multiply")
+    def test_matrix_multiplication_is_not_commutative(self, mock_check):
+        mock_check.return_value = True
         matrix1 = Matrix((1, 2), (4, 5))
         matrix2 = Matrix((100, -2), (4.4, 50))
         self.assertNotEqual(matrix1 * matrix2, matrix2 * matrix1)
 
 
-    def test_can_multiply_points_by_scalar(self):
+    @patch("points.matrices.can_multiply")
+    def test_can_multiply_matrices_by_scalar(self, mock_check):
+        mock_check.return_value = True
         matrix = Matrix((1, 2, 3), (4, 5, 6))
         self.assertEqual(
          matrix * 3,
