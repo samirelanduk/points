@@ -151,7 +151,6 @@ class VectorScalarMultiplicationTests(TestCase):
 
 
 
-
 class VectorLengthTests(TestCase):
 
     @patch("points.vectors.Vector.__len__")

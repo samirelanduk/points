@@ -7,6 +7,10 @@ class Vector:
     """A vector is a sequence of numbers. They can represent a point in space,
     or the attributes of an object.
 
+    Vectors can be added and subtracted with ``+`` and ``-``, but ``*`` is
+    reserved for scalar multiplication - you can use it to multiply the vector
+    by a number but not by another vector (there are special methods for this).
+
     :param values: The numbers that make up the Vector. If a single sequence is
     given, that sequence will be unpacked to make the vector.
     :raises TypeError: if the values given are not numeric."""
