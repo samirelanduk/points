@@ -41,7 +41,17 @@ class Vector:
     def __add__(self, other):
         if not isinstance(other, Vector):
             raise TypeError("Cannot add {} - not a Vector".format(other))
+        if self.length() != other.length():
+            raise ValueError("Cannot add {} - unequal length".format(other))
         return Vector(v1 + v2 for v1, v2 in zip(self._values, other._values))
+
+
+    def __sub__(self, other):
+        if not isinstance(other, Vector):
+            raise TypeError("Cannot add {} - not a Vector".format(other))
+        if self.length() != other.length():
+            raise ValueError("Cannot add {} - unequal length".format(other))
+        return Vector(v1 - v2 for v1, v2 in zip(self._values, other._values))
 
 
     def length(self):

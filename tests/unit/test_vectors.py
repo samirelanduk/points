@@ -78,10 +78,53 @@ class VectorAdditionTests(TestCase):
         self.assertEqual(vector3._values, [3, 7, 4])
 
 
+    @patch("points.vectors.Vector.length")
+    def test_cant_add_vectors_of_different_length(self, mock_length):
+        vector = Vector(2, 5, 1)
+        vector2 = Mock(Vector)
+        mock_length.return_value = 3
+        vector2.length.return_value = 2
+        vector2._values = [1, 2, 3]
+        with self.assertRaises(ValueError):
+            vector + vector2
+
+
     def test_can_only_add_vectors(self):
         vector = Vector(2, 5, 1)
         with self.assertRaises(TypeError):
             vector + "vector"
+
+
+
+class VectorSubtractionTests(TestCase):
+
+    @patch("points.vectors.Vector.length")
+    def test_can_subtract_vectors(self, mock_length):
+        vector = Vector(2, 5, 1)
+        vector2 = Mock(Vector)
+        mock_length.return_value = 3
+        vector2.length.return_value = 3
+        vector2._values = [1, 2, 3]
+        vector3 = vector - vector2
+        self.assertIsInstance(vector3, Vector)
+        self.assertEqual(vector3._values, [1, 3, -2])
+
+
+    @patch("points.vectors.Vector.length")
+    def test_cant_subtract_vectors_of_different_length(self, mock_length):
+        vector = Vector(2, 5, 1)
+        vector2 = Mock(Vector)
+        mock_length.return_value = 3
+        vector2.length.return_value = 2
+        vector2._values = [1, 2, 3]
+        with self.assertRaises(ValueError):
+            vector - vector2
+
+
+    def test_can_only_subtract_vectors(self):
+        vector = Vector(2, 5, 1)
+        with self.assertRaises(TypeError):
+            vector - "vector"
 
 
 
