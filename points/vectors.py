@@ -2,6 +2,7 @@
 
 from math import sqrt, acos, degrees
 from .checks import are_numeric, is_numeric
+from .trig import degree_angle
 
 class Vector:
     """A vector is a sequence of numbers. They can represent a point in space,
@@ -149,10 +150,12 @@ class Vector:
         return sum([u_i * v_i for u_i, v_i in zip(self._values, other._values)])
 
 
+    @degree_angle
     def angle_with(self, other):
         """Returns the angle between this vector and another, in degrees.
 
         :param Vector other: The other Vector.
+        :param bool degrees: If ``True`` the angle will be returned in degrees.
         :raises TypeError: If a non-Vector is given.
         :rtype: ``float``"""
 
@@ -160,4 +163,4 @@ class Vector:
             raise TypeError("{} is not a Vector".format(other))
         if self.length() != other.length():
             raise ValueError("{} and {} not equal length".format(self, other))
-        return degrees(acos(self.dot(other) / (self.magnitude() * other.magnitude())))
+        return acos(self.dot(other) / (self.magnitude() * other.magnitude()))

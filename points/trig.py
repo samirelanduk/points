@@ -1,6 +1,7 @@
 """Contains functions for using trigonometry equations."""
 
 from math import radians, degrees, sin, asin, cos, acos, sqrt
+import math
 from points.checks import is_numeric
 
 def sine_law(side1=None, angle1=None, side2=None, angle2=None, obtuse=False):
@@ -91,3 +92,15 @@ def cosine_law(side1, side2, side3=None, angle=None):
         return degrees(acos(
          ((side3 ** 2) - ((side1 ** 2) + (side2 ** 2))) / (-2 * side1 * side2)
         ))
+
+
+def degree_angle(func):
+    """A decorator which takes a function that returns an angle in radians and
+    confers upon it the ability to return it in degrees."""
+    
+    def new_func(*args, degrees=False, **kwargs):
+        angle = func(*args, **kwargs)
+        if degrees:
+            return math.degrees(angle)
+        return angle
+    return new_func

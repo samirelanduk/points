@@ -279,7 +279,7 @@ class VectorAngleWithTests(TestCase):
         vector2 = Mock(Vector)
         vector2.magnitude.return_value = 0.5
         vector2.length.return_value = 2
-        self.assertAlmostEqual(vector1.angle_with(vector2), 60, delta=0.0000005)
+        self.assertAlmostEqual(vector1.angle_with(vector2), 1.0471, delta=0.0005)
 
 
     def test_dot_product_requires_vector(self):

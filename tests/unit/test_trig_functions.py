@@ -1,5 +1,6 @@
 from unittest import TestCase
-from points.trig import sine_law, cosine_law
+from math import pi
+from points.trig import sine_law, cosine_law, degree_angle
 
 class SineLawTests(TestCase):
 
@@ -110,3 +111,15 @@ class CosineLawTests(TestCase):
     def test_need_to_supply_angle_or_side3(self):
         with self.assertRaises(TypeError):
             cosine_law(side1=60, side2=50)
+
+
+
+class AngleDecoratorTests(TestCase):
+
+    def test_decorator_can_convert_to_degrees(self):
+        def angle():
+            return pi
+        angle = degree_angle(angle)
+        self.assertEqual(angle(), pi)
+        self.assertEqual(angle(degrees=False), pi)
+        self.assertEqual(angle(degrees=True), 180)
