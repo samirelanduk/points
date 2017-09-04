@@ -2,7 +2,7 @@
 
 from math import sqrt, acos, degrees
 from .checks import are_numeric, is_numeric
-from .trig import degree_angle
+from .geometry import degree_angle
 
 class Vector:
     """A vector is a sequence of numbers. They can represent a point in space,
