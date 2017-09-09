@@ -11,4 +11,6 @@ def degree_angle(func):
         if degrees:
             return math.degrees(angle)
         return angle
+    new_func.__name__ = func.__name__
+    new_func.__doc__ = func.__doc__
     return new_func

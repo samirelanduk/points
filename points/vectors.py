@@ -12,7 +12,7 @@ class Vector:
     reserved for scalar multiplication - you can use it to multiply the vector
     by a number but not by another vector (there are special methods for this).
 
-    :param values: The numbers that make up the Vector. If a single sequence is
+    :param values: The numbers that make up the Vector. If a single sequence is\
     given, that sequence will be unpacked to make the vector.
     :raises TypeError: if the values given are not numeric."""
 
@@ -152,7 +152,7 @@ class Vector:
 
     @degree_angle
     def angle_with(self, other):
-        """Returns the angle between this vector and another, in degrees.
+        """Returns the angle between this vector and another, in radians.
 
         :param Vector other: The other Vector.
         :param bool degrees: If ``True`` the angle will be returned in degrees.

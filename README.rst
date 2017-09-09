@@ -1,3 +1,54 @@
+points
+======
+
+points is a Python library for performing linear algebra and geometry
+calculations.
+
+Example
+-------
+
+  >>> import points
+  >>> vector = points.Vector(4, 3, 12)
+  >>> vector.magnitude()
+  >>> 13.0
+
+
+
+
+
+Installing
+----------
+
+pip
+~~~
+
+points can be installed using pip:
+
+``$ pip3 install points``
+
+points is written for Python 3, and does not support Python 2.
+
+If you get permission errors, try using ``sudo``:
+
+``$ sudo pip3 install points``
+
+
+Development
+~~~~~~~~~~~
+
+The repository for points, containing the most recent iteration, can be
+found `here <http://github.com/samirelanduk/points/>`_. To clone the
+points repository directly from there, use:
+
+``$ git clone git://github.com/samirelanduk/points.git``
+
+
+Requirements
+~~~~~~~~~~~~
+
+points has no dependencies, compiled or otherwise, and is pure Python.
+
+
 Overview
 --------
 
@@ -6,7 +57,7 @@ points is a library for performing geometry and linear algebra calculations.
 Linear Algebra
 ~~~~~~~~~~~~~~
 
-The :py:class:`.Vector` is the simplest linear algebra object. They can
+The ``Vector`` is the simplest linear algebra object. They can
 represent a point in space, or the attributes of an object.
 
   >>> import points
@@ -60,3 +111,15 @@ with the dot product and angle between them:
   0.8900119515744306
   >>> vector.angle_with(vector2, degrees=True)
   50.99392854141668
+
+
+Changelog
+---------
+
+Release 0.1.0
+~~~~~~~~~~~~~
+
+`9 September 2017`
+
+* Added basic Vector class.
+* Added basic degrees/radians conversion decorator.
