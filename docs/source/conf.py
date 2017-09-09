@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # points documentation build configuration file, created by
-# sphinx-quickstart on Mon Sep  4 13:23:38 2017.
+# sphinx-quickstart on Sat Sep  9 08:05:51 2017.
 #
 # This file is execfile()d with the current directory set to its
 # containing dir.
@@ -32,6 +32,7 @@ sys.path.insert(0, os.path.abspath('../..'))
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = ['sphinx.ext.autodoc',
+    'sphinx.ext.coverage',
     'sphinx.ext.mathjax',
     'sphinx.ext.viewcode']
 
