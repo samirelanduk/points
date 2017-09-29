@@ -252,6 +252,12 @@ class VectorDotProductTests(TestCase):
         vector2.length.return_value = 2
         self.assertEqual(vector1.dot(vector2), 66)
 
+    def test_can_get_dot_product_matmul(self):
+        vector1 = Vector(-6, 8)
+        vector2 = Mock(Vector)
+        vector2._values = [5, 12]
+        vector2.length.return_value = 2
+        self.assertEqual(vector1 @ vector2, 66)
 
     def test_dot_product_requires_vector(self):
         vector1 = Vector(-6, -8)

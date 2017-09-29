@@ -70,6 +70,10 @@ class Vector:
         return self * other
 
 
+    def __matmul__(self, other):
+        return self.dot(other)
+
+
     def length(self):
         """Returns the length of the Vector. This is the number of values it
         contains, not its :py:meth:`magnitude`.
