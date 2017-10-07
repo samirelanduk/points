@@ -141,6 +141,7 @@ class Vector:
 
         :param Vector other: The other Vector.
         :raises TypeError: If a non-Vector is given.
+        :raises ValueError: If the Vectors are of different lengths.
         :rtype: ``float``"""
 
         if not isinstance(other, Vector):
@@ -148,6 +149,27 @@ class Vector:
         if self.length() != other.length():
             raise ValueError("{} and {} not equal length".format(self, other))
         return sum([u_i * v_i for u_i, v_i in zip(self._values, other._values)])
+
+
+    def cross(self, other):
+        """Returns the cross product between this vector and another. Only
+        three-dimensional Vectors can do this (Vectors of length 3).
+
+        :param Vector other: The other Vector.
+        :raises TypeError: If a non-Vector is given.
+        :raises ValueError: if the Vectors are not three-dimensional.
+        :rtype: ``Vector``"""
+
+        if not isinstance(other, Vector):
+            raise TypeError("{} is not a Vector".format(other))
+        values, other = self._values, other._values
+        if len(values) != 3 or len(other) != 3:
+            raise ValueError("{} or {} is not 3D".format(self, other))
+        return Vector(
+         values[1] * other[2] - values[2] * other[1],
+         values[2] * other[0] - values[0] * other[2],
+         values[0] * other[1] - values[1] * other[0]
+        )
 
 
     @degree_angle

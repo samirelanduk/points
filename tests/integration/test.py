@@ -28,3 +28,5 @@ class VectorTests(TestCase):
         self.assertEqual(v.values(), (50, 230, 170))
         v = v1.dot(v2)
         self.assertEqual(v, 131)
+        v = v1.cross(v2)
+        self.assertEqual(v.values(), (275, 193, -342))

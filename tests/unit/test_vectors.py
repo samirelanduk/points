@@ -268,6 +268,30 @@ class VectorDotProductTests(TestCase):
 
 
 
+class VectorCrossProductTests(TestCase):
+
+    def test_can_get_cross_product(self):
+        vector1 = Vector(3, -3, 1)
+        vector2 = Mock(Vector)
+        vector2._values = [4, 9, 2]
+        self.assertEqual(vector1.cross(vector2)._values, [-15, -2, 39])
+
+
+    def test_cross_product_requires_vector(self):
+        vector1 = Vector(-6, -8)
+        with self.assertRaises(TypeError):
+            vector1.cross("vector")
+
+
+    def test_cross_product_requires_length_3(self):
+        vector1 = Vector(-6, 8)
+        vector2 = Mock(Vector)
+        vector2._values = [4, 9, 2]
+        with self.assertRaises(ValueError):
+            vector1.cross(vector2)
+
+
+
 class VectorAngleWithTests(TestCase):
 
     @patch("points.vectors.Vector.magnitude")
