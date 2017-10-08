@@ -243,6 +243,21 @@ class VectorMagnitudeTests(TestCase):
 
 
 
+class VectorDistanceTests(TestCase):
+
+    @patch("points.vectors.Vector.__sub__")
+    def test_can_get_distance_between_vectors(self, mock_sub):
+        vector1 = Vector(3, 4)
+        vector2 = Mock(Vector)
+        resultant_vector = Mock(Vector)
+        mock_sub.return_value = resultant_vector
+        resultant_vector.magnitude.return_value = 100
+        distance = vector1.distance_to(vector2)
+        mock_sub.assert_called_with(vector2)
+        self.assertEqual(distance, 100)
+
+
+
 class VectorDotProductTests(TestCase):
 
     def test_can_get_dot_product(self):

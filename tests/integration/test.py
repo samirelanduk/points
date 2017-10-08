@@ -24,6 +24,8 @@ class VectorTests(TestCase):
         self.assertEqual(v.values(), (19, 19, 26))
         v = v1 - v2
         self.assertEqual(v.values(), (-9, 27, 8))
+        self.assertAlmostEqual(v1.distance_to(v2), 29.563, delta=0.005)
+        self.assertAlmostEqual(v2.distance_to(v1), 29.563, delta=0.005)
         v = v1 * 10
         self.assertEqual(v.values(), (50, 230, 170))
         v = v1.dot(v2)

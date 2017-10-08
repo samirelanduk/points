@@ -136,6 +136,17 @@ class Vector:
         return sqrt(sum([x**2 for x in self._values]))
 
 
+    def distance_to(self, other):
+        """Returns the distance between this and another vector, when
+        originating at the origin.
+
+        :param Vector other: the other Vector.
+        :rtype: ``float``"""
+
+        vector = self - other
+        return vector.magnitude()
+
+
     def dot(self, other):
         """Returns the dot product between this vector and another.
 
@@ -156,7 +167,7 @@ class Vector:
         three-dimensional Vectors can do this (Vectors of length 3).
 
         :param Vector other: The other Vector.
-        :raises TypeError: If a non-Vector is given.
+        :raises TypeError: if a non-Vector is given.
         :raises ValueError: if the Vectors are not three-dimensional.
         :rtype: ``Vector``"""
 
