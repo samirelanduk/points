@@ -20,6 +20,12 @@ class VectorTests(TestCase):
         self.assertAlmostEqual(v1.magnitude(), 29.034, delta=0.005)
         self.assertAlmostEqual(v1.angle_with(v2), 1.304, delta=0.005)
 
+        components = v1.components()
+        self.assertEqual(len(components), 3)
+        self.assertEqual(components[0].values(), (5, 0, 0))
+        self.assertEqual(components[1].values(), (0, 23, 0))
+        self.assertEqual(components[2].values(), (0, 0, 17))
+
         v = v1 + v2
         self.assertEqual(v.values(), (19, 19, 26))
         v = v1 - v2

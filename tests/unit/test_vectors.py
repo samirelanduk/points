@@ -243,6 +243,19 @@ class VectorMagnitudeTests(TestCase):
 
 
 
+class VectorComponentTests(TestCase):
+
+    def test_can_get_vector_components(self):
+        vector = Vector(3, 4)
+        components = vector.components()
+        self.assertEqual(len(components), 2)
+        self.assertIsInstance(components[0], Vector)
+        self.assertIsInstance(components[1], Vector)
+        self.assertEqual(components[0]._values, [3, 0])
+        self.assertEqual(components[1]._values, [0, 4])
+
+
+
 class VectorDistanceTests(TestCase):
 
     @patch("points.vectors.Vector.__sub__")

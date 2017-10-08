@@ -136,6 +136,19 @@ class Vector:
         return sqrt(sum([x**2 for x in self._values]))
 
 
+    def components(self):
+        """Returns the individual components that sum to make up the Vector.
+
+        :returns: ``tuple`` of ``Vector``"""
+
+        components = []
+        for index, value in enumerate(self._values):
+            component_values = [0] * len(self._values)
+            component_values[index] = value
+            components.append(Vector(*component_values))
+        return components
+
+
     def distance_to(self, other):
         """Returns the distance between this and another vector, when
         originating at the origin.
