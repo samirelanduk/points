@@ -1,6 +1,16 @@
 Changelog
 ---------
 
+Release 0.2.0
+~~~~~~~~~~~~~
+
+`10 October 2017`
+
+* Added Vector distances.
+* Added component Vector generation.
+* Added Vector cross product.
+
+
 Release 0.1.0
 ~~~~~~~~~~~~~
 

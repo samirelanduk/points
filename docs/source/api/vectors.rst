@@ -1,6 +1,6 @@
-``points.vectors`` (Vectors)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+points.vectors
+--------------
 
 .. automodule:: points.vectors
-    :members:
-    :inherited-members:
+	:members:
+	:inherited-members:

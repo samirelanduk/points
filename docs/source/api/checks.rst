@@ -1,6 +1,6 @@
-``points.checks`` (Checks)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+points.checks
+-------------
 
 .. automodule:: points.checks
-    :members:
-    :inherited-members:
+	:members:
+	:inherited-members:

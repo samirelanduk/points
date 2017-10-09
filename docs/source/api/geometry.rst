@@ -1,6 +1,6 @@
-``points.geometry`` (Geometry)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+points.geometry
+---------------
 
 .. automodule:: points.geometry
-    :members:
-    :inherited-members:
+	:members:
+	:inherited-members:

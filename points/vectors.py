@@ -146,7 +146,7 @@ class Vector:
             component_values = [0] * len(self._values)
             component_values[index] = value
             components.append(Vector(*component_values))
-        return components
+        return tuple(components)
 
 
     def distance_to(self, other):
