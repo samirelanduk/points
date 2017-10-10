@@ -75,6 +75,11 @@ size of the line the Vector represents in space, you need the magnitude:
   >>> vector.magnitude()
   13.0
 
+You can get the component vectors like so:
+
+  >>> vector.components()
+  (<Vector [4, 0, 0]>, <Vector [0, 3, 0]>, <Vector [0, 0, 12]>)
+
 You can add and remove values to the Vector in the same way you would with a
 ``list``:
 
@@ -105,8 +110,12 @@ with the dot product and angle between them:
   <Vector [13, 2, 16]>
   >>> vector - vector2
   <Vector [-5, 4, 8]>
+  >>> vector.distance_to(vector2)
+  10.246950765959598
   >>> vector.dot(vector2)
   81
+  >>> vector.cross(vector2)
+  <Vector [24, 92, -31]>
   >>> vector.angle_with(vector2)
   0.8900119515744306
   >>> vector.angle_with(vector2, degrees=True)
@@ -115,6 +124,16 @@ with the dot product and angle between them:
 
 Changelog
 ---------
+
+Release 0.2.0
+~~~~~~~~~~~~~
+
+`10 October 2017`
+
+* Added Vector distances.
+* Added component Vector generation.
+* Added Vector cross product.
+
 
 Release 0.1.0
 ~~~~~~~~~~~~~
