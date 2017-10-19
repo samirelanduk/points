@@ -52,3 +52,11 @@ class Matrix:
         :rtype: ``tuple``"""
 
         return (self.width(), self.height())
+
+
+    def rows(self):
+        """Returns the rows of the Matrix.
+
+        :rtype: ``tuple``"""
+
+        return tuple([tuple(row) for row in self._rows])

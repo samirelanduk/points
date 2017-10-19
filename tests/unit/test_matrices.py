@@ -76,3 +76,11 @@ class MatrixSizeTests(TestCase):
         self.assertEqual(matrix.size(), (50, 35))
         mock_width.assert_called_with()
         mock_height.assert_called_with()
+
+
+
+class MatrixRowsTests(TestCase):
+
+    def test_can_get_rows(self):
+        matrix = Matrix([1, 2], [3, 4], [5, 6])
+        self.assertEqual(matrix.rows(), ((1, 2), (3, 4), (5, 6)))
