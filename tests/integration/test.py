@@ -38,3 +38,14 @@ class VectorTests(TestCase):
         self.assertEqual(v, 131)
         v = v1.cross(v2)
         self.assertEqual(v.values(), (275, 193, -342))
+
+
+
+class MatrixTests(TestCase):
+
+    def test_matrices(self):
+        matrix = points.Matrix([1, 2, 3], (4, 5, 6), [7, 8, 9])
+        self.assertEqual(matrix.size(), (3, 3))
+        self.assertEqual(matrix.rows()[0], (1, 2, 3))
+        self.assertEqual(matrix.rows()[1], (4, 5, 6))
+        self.assertEqual(matrix.rows()[2], (7, 8, 9))
