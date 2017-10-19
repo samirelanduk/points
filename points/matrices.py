@@ -24,3 +24,31 @@ class Matrix:
             if any(not isinstance(element, (int, float)) for element in arg):
                 raise TypeError("row {} has non-numeric values".format(arg))
             self._rows.append(list(arg))
+
+
+    def __repr__(self):
+        return "<{}×{} Matrix>".format(*self.size())
+
+
+    def width(self):
+        """Returns the Matrix width - how many columns it has.
+
+        :rtype: ``int``"""
+
+        return len(self._rows[0])
+
+
+    def height(self):
+        """Returns the Matrix height - how many rows it has.
+
+        :rtype: ``int``"""
+
+        return len(self._rows)
+
+
+    def size(self):
+        """Returns the dimensions of the Matrix.
+
+        :rtype: ``tuple``"""
+
+        return (self.width(), self.height())

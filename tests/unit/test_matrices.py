@@ -36,3 +36,43 @@ class MatrixCreationTests(TestCase):
     def test_matrix_cannot_be_empty(self):
         with self.assertRaises(ValueError):
             Matrix()
+
+
+
+class MatrixReprTests(TestCase):
+
+    @patch("points.matrices.Matrix.size")
+    def test_matrix_repr(self, mock_size):
+        mock_size.return_value = (12, 43)
+        matrix = Matrix([1, 2], [3, 4], [5, 6])
+        self.assertEqual(str(matrix), "<12×43 Matrix>")
+
+
+
+class MatrixWidthTests(TestCase):
+
+    def test_matrix_width(self):
+        matrix = Matrix([1, 2], [3, 4], [5, 6])
+        self.assertEqual(matrix.width(), 2)
+
+
+
+class MatrixHeightTests(TestCase):
+
+    def test_matrix_height(self):
+        matrix = Matrix([1, 2], [3, 4], [5, 6])
+        self.assertEqual(matrix.height(), 3)
+
+
+
+class MatrixSizeTests(TestCase):
+
+    @patch("points.matrices.Matrix.width")
+    @patch("points.matrices.Matrix.height")
+    def test_matrix_size(self, mock_height, mock_width):
+        mock_width.return_value = 50
+        mock_height.return_value = 35
+        matrix = Matrix([1, 2], [3, 4], [5, 6])
+        self.assertEqual(matrix.size(), (50, 35))
+        mock_width.assert_called_with()
+        mock_height.assert_called_with()
