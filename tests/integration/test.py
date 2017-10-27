@@ -49,6 +49,9 @@ class MatrixTests(TestCase):
         self.assertEqual(matrix.rows()[0], (1, 2, 3))
         self.assertEqual(matrix.rows()[1], (4, 5, 6))
         self.assertEqual(matrix.rows()[2], (7, 8, 9))
+        self.assertEqual(matrix.columns()[0], (1, 4, 7))
+        self.assertEqual(matrix.columns()[1], (2, 5, 8))
+        self.assertEqual(matrix.columns()[2], (3, 6, 9))
 
         self.assertIn(7, matrix)
         self.assertNotIn(10, matrix)

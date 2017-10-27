@@ -80,9 +80,7 @@ class Matrix:
              "{} and {} dimensions incompatible".format(self, other)
             )
         new_rows = []
-        other_columns = [[
-         row[n] for row in other._rows
-        ] for n in range(len(other._rows[0]))]
+        other_columns = other.columns()
         for row in self._rows:
             new_row = []
             for c in range(len(other_columns)):
@@ -124,3 +122,13 @@ class Matrix:
         :rtype: ``tuple``"""
 
         return tuple([tuple(row) for row in self._rows])
+
+
+    def columns(self):
+        """Returns the rows of the Matrix.
+
+        :rtype: ``tuple``"""
+
+        return tuple([tuple([
+         row[n] for row in self._rows
+        ]) for n in range(len(self._rows[0]))])

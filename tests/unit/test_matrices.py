@@ -152,6 +152,7 @@ class MatrixMatMultiplicationTests(TestCase):
         mock_size.return_value = (3, 2)
         matrix2 = Mock(Matrix)
         matrix2._rows = [[10, 20, 30], [40, 50, 60]]
+        matrix2.columns.return_value = ((10, 40), (20, 50), (30, 60))
         matrix2.size.return_value = (2, 3)
         matrix3 = matrix @ matrix2
         self.assertEqual(matrix3._rows, [[90, 120, 150], [190, 260, 330], [290, 400, 510]])
@@ -168,7 +169,8 @@ class MatrixMatMultiplicationTests(TestCase):
         matrix = Matrix([1, 2], [3, 4], [5, 6])
         mock_size.return_value = (3, 2)
         matrix2 = Mock(Matrix)
-        matrix2._rows = [[10, 20, 30], [40, 50, 60], [70, 80, 90]]
+        matrix2._rows = [[10, 20, 30], [40, 50, 60]]
+        matrix2.columns.return_value = ((10, 40), (20, 50), (30, 60))
         matrix2.size.return_value = (3, 3)
         with self.assertRaises(ValueError):
             matrix3 = matrix @ matrix2
@@ -210,3 +212,11 @@ class MatrixRowsTests(TestCase):
     def test_can_get_rows(self):
         matrix = Matrix([1, 2], [3, 4], [5, 6])
         self.assertEqual(matrix.rows(), ((1, 2), (3, 4), (5, 6)))
+
+
+
+class MatrixColumnsTests(TestCase):
+
+    def test_can_get_columns(self):
+        matrix = Matrix([1, 2], [3, 4], [5, 6])
+        self.assertEqual(matrix.columns(), ((1, 3, 5), (2, 4, 6)))
