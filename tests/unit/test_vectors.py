@@ -21,11 +21,9 @@ class VectorCreationTests(TestCase):
         self.assertEqual(vector._values, [2])
 
 
-    @patch("points.vectors.are_numeric")
-    def test_vector_values_must_be_numeric(self, mock_are):
-        mock_are.return_value = False
+    def test_vector_values_must_be_numeric(self):
         with self.assertRaises(TypeError):
-            vector = Vector([2, 5, 1])
+            vector = Vector([2, "5", 1])
 
 
 
@@ -177,15 +175,10 @@ class VectorValueAdditionTests(TestCase):
         self.assertEqual(vector._values, [2, 5, 1, 12])
 
 
-    @patch("points.vectors.is_numeric")
-    @patch("points.vectors.are_numeric")
-    def test_can_only_add_numbers(self, mock_are, mock_is):
-        mock_is.return_value = False
-        mock_are.return_value = True
+    def test_can_only_add_numbers(self):
         vector = Vector(2, 5, 1)
         with self.assertRaises(TypeError):
-            vector.add(12)
-        mock_is.assert_called_with(12)
+            vector.add("12")
 
 
 
@@ -197,15 +190,10 @@ class VectorValueInsertionTests(TestCase):
         self.assertEqual(vector._values, [2, 12, 5, 1])
 
 
-    @patch("points.vectors.is_numeric")
-    @patch("points.vectors.are_numeric")
-    def test_can_only_insert_numbers(self, mock_are, mock_is):
-        mock_is.return_value = False
-        mock_are.return_value = True
+    def test_can_only_insert_numbers(self):
         vector = Vector(2, 5, 1)
         with self.assertRaises(TypeError):
-            vector.insert(1, 12)
-        mock_is.assert_called_with(12)
+            vector.insert(1, "12")
 
 
 

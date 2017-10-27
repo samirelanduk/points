@@ -1,7 +1,6 @@
 """Contains the Vector class."""
 
 from math import sqrt, acos, degrees
-from .checks import are_numeric, is_numeric
 from .geometry import degree_angle
 
 class Vector:
@@ -22,8 +21,9 @@ class Vector:
             try:
                 values_ = list(values[0])
             except TypeError: pass
-        if not are_numeric(*values_):
-            raise TypeError("{} contains non-numeric values".format(values_))
+        for value in values_:
+            if not isinstance(value, (int, float)):
+                raise TypeError("{} is not numeric".format(value))
         self._values = list(values_)
 
 
@@ -93,7 +93,7 @@ class Vector:
         :param value: the value to add.
         :raises TypeError: if the value is non-numeric."""
 
-        if not is_numeric(value):
+        if not isinstance(value, (int, float)):
             raise TypeError("{} is not numeric".format(value))
         self._values.append(value)
 
@@ -105,7 +105,7 @@ class Vector:
         :param value: the value to add.
         :raises TypeError: if the value is non-numeric."""
 
-        if not is_numeric(value):
+        if not isinstance(value, (int, float)):
             raise TypeError("{} is not numeric".format(value))
         self._values.insert(index, value)
 
