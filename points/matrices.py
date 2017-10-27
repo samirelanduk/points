@@ -56,6 +56,19 @@ class Matrix:
         return Matrix(*rows)
 
 
+    def __mul__(self, other):
+        if not isinstance(other, (int, float)):
+            raise TypeError(
+             "{} isn't numeric - Matrix * operator needs scalars".format(other)
+            )
+        rows = [[n * other for n in row] for row in self._rows]
+        return Matrix(*rows)
+
+
+    def __rmul__(self, other):
+        return self * other
+
+
     def width(self):
         """Returns the Matrix width - how many columns it has.
 

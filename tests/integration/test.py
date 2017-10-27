@@ -60,3 +60,9 @@ class MatrixTests(TestCase):
         self.assertEqual(
          (matrix2 - matrix).rows(), ((10, 10, 28), (37, 10, 55), (10, 73, 10))
         )
+        self.assertEqual(
+         (matrix * 10).rows(), ((10, 20, 30), (40, 50, 60), (70, 80, 90))
+        )
+        self.assertEqual(
+         (10 * matrix).rows(), ((10, 20, 30), (40, 50, 60), (70, 80, 90))
+        )

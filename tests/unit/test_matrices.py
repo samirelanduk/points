@@ -121,6 +121,27 @@ class MatrixSubtractionTests(TestCase):
             matrix - matrix2
 
 
+class MatrixMultiplicationTests(TestCase):
+
+    def test_can_multiply_matrix_by_number(self):
+        matrix = Matrix([1, 2], [3, 4], [5, 6])
+        matrix2 = matrix * 2
+        self.assertEqual(matrix2._rows, [[2, 4], [6, 8], [10, 12]])
+
+
+    def test_can_multiply_number_by_matrix(self):
+        matrix = Matrix([1, 2], [3, 4], [5, 6])
+        matrix2 = 2 * matrix
+        self.assertEqual(matrix2._rows, [[2, 4], [6, 8], [10, 12]])
+
+
+    def test_matrix_multiplication_requires_numbers(self):
+        matrix = Matrix([1, 2], [3, 4], [5, 6])
+        with self.assertRaises(TypeError):
+            matrix * [1, 2, 3]
+        with self.assertRaises(TypeError):
+            [1, 2, 3] * matrix
+
 
 
 class MatrixWidthTests(TestCase):
