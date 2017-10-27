@@ -1,7 +1,10 @@
 """Contains the Matrix class."""
 
 class Matrix:
-    """A Matrix is a raectangular array of numbers:
+    """A Matrix is a rectangular array of numbers.
+
+    They can be added and subtracted from each other, and multiplied by a scalar
+    using the `*` operator. To multiply a Matrix with another Matrix, use `@`.
 
     :param iter args: The rows of the Matrix. Each row must be iterable.
     :raises ValueError: if you create an empty matrix.
