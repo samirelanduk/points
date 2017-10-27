@@ -34,6 +34,28 @@ class Matrix:
         return any([item in row for row in self._rows])
 
 
+    def __add__(self, other):
+        if not isinstance(other, Matrix):
+            raise TypeError("{} is not a Matrix".format(other))
+        if self.size() != other.size():
+            raise ValueError("{} and {} are different sizes".format(self, other))
+        rows = [[
+         n1 + n2 for n1, n2 in zip(row1, row2)
+        ] for row1, row2 in zip(self._rows, other._rows)]
+        return Matrix(*rows)
+
+
+    def __sub__(self, other):
+        if not isinstance(other, Matrix):
+            raise TypeError("{} is not a Matrix".format(other))
+        if self.size() != other.size():
+            raise ValueError("{} and {} are different sizes".format(self, other))
+        rows = [[
+         n1 - n2 for n1, n2 in zip(row1, row2)
+        ] for row1, row2 in zip(self._rows, other._rows)]
+        return Matrix(*rows)
+
+
     def width(self):
         """Returns the Matrix width - how many columns it has.
 

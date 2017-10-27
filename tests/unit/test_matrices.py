@@ -1,5 +1,5 @@
 from unittest import TestCase
-from unittest.mock import Mock, patch
+from unittest.mock import Mock, patch, MagicMock
 from points.matrices import Matrix
 
 class MatrixCreationTests(TestCase):
@@ -59,6 +59,67 @@ class MatrixContainerTests(TestCase):
     def test_items_not_in_matrix(self):
         matrix = Matrix([1, 2], [3, 4], [5, 6])
         self.assertNotIn(8, matrix)
+
+
+
+class MatrixAdditionTests(TestCase):
+
+    @patch("points.matrices.Matrix.size")
+    def test_can_add_matrices(self, mock_size):
+        matrix = Matrix([1, 2], [3, 4], [5, 6])
+        mock_size.return_value = (3, 2)
+        matrix2 = Mock(Matrix)
+        matrix2._rows = [[10, 20], [30, 40], [50, 60]]
+        matrix2.size.return_value = (3, 2)
+        matrix3 = matrix + matrix2
+        self.assertEqual(matrix3._rows, [[11, 22], [33, 44], [55, 66]])
+
+
+    def test_can_only_add_matrices(self):
+        matrix = Matrix([1, 2], [3, 4], [5, 6])
+        with self.assertRaises(TypeError):
+            matrix + [1, 2, 3]
+
+
+    @patch("points.matrices.Matrix.size")
+    def test_matrix_addition_needs_equal_size(self, mock_size):
+        mock_size.return_value = (3, 4)
+        matrix = Matrix([1, 2], [3, 4], [5, 6])
+        matrix2 = Mock(Matrix)
+        matrix2.size.return_value = (4, 3)
+        with self.assertRaises(ValueError):
+            matrix + matrix2
+
+
+
+class MatrixSubtractionTests(TestCase):
+
+    @patch("points.matrices.Matrix.size")
+    def test_can_subtract_matrices(self, mock_size):
+        matrix = Matrix([1, 2], [3, 4], [5, 6])
+        mock_size.return_value = (3, 2)
+        matrix2 = Mock(Matrix)
+        matrix2._rows = [[10, 20], [30, 40], [50, 60]]
+        matrix2.size.return_value = (3, 2)
+        matrix3 = matrix - matrix2
+        self.assertEqual(matrix3._rows, [[-9, -18], [-27, -36], [-45, -54]])
+
+
+    def test_can_only_subtract_matrices(self):
+        matrix = Matrix([1, 2], [3, 4], [5, 6])
+        with self.assertRaises(TypeError):
+            matrix - [1, 2, 3]
+
+
+    @patch("points.matrices.Matrix.size")
+    def test_matrix_subtraction_needs_equal_size(self, mock_size):
+        mock_size.return_value = (3, 4)
+        matrix = Matrix([1, 2], [3, 4], [5, 6])
+        matrix2 = Mock(Matrix)
+        matrix2.size.return_value = (4, 3)
+        with self.assertRaises(ValueError):
+            matrix - matrix2
+
 
 
 

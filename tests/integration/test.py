@@ -52,3 +52,11 @@ class MatrixTests(TestCase):
 
         self.assertIn(7, matrix)
         self.assertNotIn(10, matrix)
+
+        matrix2 = points.Matrix([11, 12, 31], (41, 15, 61), [17, 81, 19])
+        self.assertEqual(
+         (matrix + matrix2).rows(), ((12, 14, 34), (45, 20, 67), (24, 89, 28))
+        )
+        self.assertEqual(
+         (matrix2 - matrix).rows(), ((10, 10, 28), (37, 10, 55), (10, 73, 10))
+        )
