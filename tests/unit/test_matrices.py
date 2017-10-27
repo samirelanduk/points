@@ -49,6 +49,19 @@ class MatrixReprTests(TestCase):
 
 
 
+class MatrixContainerTests(TestCase):
+
+    def test_items_in_matrix(self):
+        matrix = Matrix([1, 2], [3, 4], [5, 6])
+        self.assertIn(4, matrix)
+
+
+    def test_items_not_in_matrix(self):
+        matrix = Matrix([1, 2], [3, 4], [5, 6])
+        self.assertNotIn(8, matrix)
+
+
+
 class MatrixWidthTests(TestCase):
 
     def test_matrix_width(self):

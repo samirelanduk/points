@@ -30,6 +30,10 @@ class Matrix:
         return "<{}×{} Matrix>".format(*self.size())
 
 
+    def __contains__(self, item):
+        return any([item in row for row in self._rows])
+
+
     def width(self):
         """Returns the Matrix width - how many columns it has.
 
