@@ -144,6 +144,37 @@ class MatrixMultiplicationTests(TestCase):
 
 
 
+class MatrixMatMultiplicationTests(TestCase):
+
+    @patch("points.matrices.Matrix.size")
+    def test_can_mat_mul_matrices(self, mock_size):
+        matrix = Matrix([1, 2], [3, 4], [5, 6])
+        mock_size.return_value = (3, 2)
+        matrix2 = Mock(Matrix)
+        matrix2._rows = [[10, 20, 30], [40, 50, 60]]
+        matrix2.size.return_value = (2, 3)
+        matrix3 = matrix @ matrix2
+        self.assertEqual(matrix3._rows, [[90, 120, 150], [190, 260, 330], [290, 400, 510]])
+
+
+    def test_can_only_matmul_matrices(self):
+        matrix = Matrix([1, 2], [3, 4], [5, 6])
+        with self.assertRaises(TypeError):
+            matrix @ 100
+
+
+    @patch("points.matrices.Matrix.size")
+    def test_matrix_dimensions_must_match(self, mock_size):
+        matrix = Matrix([1, 2], [3, 4], [5, 6])
+        mock_size.return_value = (3, 2)
+        matrix2 = Mock(Matrix)
+        matrix2._rows = [[10, 20, 30], [40, 50, 60], [70, 80, 90]]
+        matrix2.size.return_value = (3, 3)
+        with self.assertRaises(ValueError):
+            matrix3 = matrix @ matrix2
+
+
+
 class MatrixWidthTests(TestCase):
 
     def test_matrix_width(self):

@@ -69,6 +69,28 @@ class Matrix:
         return self * other
 
 
+    def __matmul__(self, other):
+        if not isinstance(other, Matrix):
+            raise TypeError("{} is not a Matrix".format(other))
+        if self.size()[1] != other.size()[0]:
+            raise ValueError(
+             "{} and {} dimensions incompatible".format(self, other)
+            )
+        new_rows = []
+        other_columns = [[
+         row[n] for row in other._rows
+        ] for n in range(len(other._rows[0]))]
+        for row in self._rows:
+            new_row = []
+            for c in range(len(other_columns)):
+                new_row.append(sum([
+                 row[j] * other._rows[j][c] for j in range(len(other._rows))
+                ]))
+            new_rows.append(new_row)
+        return Matrix(*new_rows)
+
+
+
     def width(self):
         """Returns the Matrix width - how many columns it has.
 
