@@ -18,7 +18,7 @@ represent a point in space, or the attributes of an object.
   >>> vector.length()
   3
 
-Not that 'length' here refers to the number of values in the Vector - to get the
+Note that 'length' here refers to the number of values in the Vector - to get the
 size of the line the Vector represents in space, you need the magnitude:
 
   >>> vector.magnitude()

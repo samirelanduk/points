@@ -1,6 +1,7 @@
 from unittest import TestCase
 from unittest.mock import Mock, patch, MagicMock
 from points.matrices import Matrix
+from points.vectors import Vector
 
 class MatrixCreationTests(TestCase):
 
@@ -12,6 +13,25 @@ class MatrixCreationTests(TestCase):
     def test_can_make_matrix_with_tuple(self):
         matrix = Matrix([1, 2], (3, 4))
         self.assertEqual(matrix._rows, [[1, 2], [3, 4]])
+
+
+    def test_can_make_matrix_with_vectors(self):
+        v1, v2 = Mock(Vector), Mock(Vector)
+        v1._values = [1, 3]
+        v1.__len__ = MagicMock()
+        v1.__len__.return_value = 2
+        v2._values = [2, 4]
+        matrix = Matrix(v1, v2)
+        self.assertEqual(matrix._rows, [[1, 2], [3, 4]])
+
+
+    def test_all_need_to_be_vectors_if_they_are_to_be_used(self):
+        v1 = Mock(Vector)
+        v1._values = [1, 3]
+        v1.__len__ = MagicMock()
+        v1.__len__.return_value = 2
+        with self.assertRaises(TypeError):
+            Matrix(v1, [2, 4])
 
 
     def test_cannot_make_matrix_from_none_iterables(self):

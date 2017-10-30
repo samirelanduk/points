@@ -75,3 +75,14 @@ class MatrixTests(TestCase):
         self.assertEqual(
          (matrix2 @ matrix).rows(), ((276, 330, 384), (528, 645, 762), (474, 591, 708))
         )
+
+
+    def test_matrices_with_vectors(self):
+
+        v1 = points.Vector(1, 2, 3)
+        v2 = points.Vector(4, 5, 6)
+        v3 = points.Vector(7, 8, 9)
+        matrix = points.Matrix(v1, v2, v3)
+        self.assertEqual(matrix.rows()[0], (1, 4, 7))
+        self.assertEqual(matrix.rows()[1], (2, 5, 8))
+        self.assertEqual(matrix.rows()[2], (3, 6, 9))

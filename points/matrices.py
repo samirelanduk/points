@@ -1,13 +1,18 @@
 """Contains the Matrix class."""
 
+from .vectors import Vector
+
 class Matrix:
-    """A Matrix is a rectangular array of numbers.
+    """A Matrix is a rectangular array of numbers. They are created from
+    iterables, which will be interpeted as rows. If you pass :py:class:`.Vector`
+    objects though, they will be interpreted as columns.
 
     They can be added and subtracted from each other, and multiplied by a scalar
     using the `*` operator. To multiply a Matrix with another Matrix, use `@`.
 
     :param iter args: The rows of the Matrix. Each row must be iterable.
     :raises ValueError: if you create an empty matrix.
+    :raises TypeError: if you mix Vectors with other iterables.
     :raises TypeError: if you give non iterables.
     :raises ValueError: if you give rows of different lengths."""
 
@@ -16,6 +21,14 @@ class Matrix:
         try: width = len(args[0])
         except:
             raise ValueError("Matrix cannot be empty")
+        if any([isinstance(arg, Vector) for arg in args]):
+            if not all([isinstance(arg, Vector) for arg in args]):
+                raise TypeError(
+                 "Either all Matrix args have to be Vectors, or none"
+                )
+            args = [[
+             row._values[n] for row in args
+            ] for n in range(len(args))]
         for arg in args:
             try: iter(arg)
             except:
