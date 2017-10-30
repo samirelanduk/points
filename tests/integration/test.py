@@ -86,3 +86,6 @@ class MatrixTests(TestCase):
         self.assertEqual(matrix.rows()[0], (1, 4, 7))
         self.assertEqual(matrix.rows()[1], (2, 5, 8))
         self.assertEqual(matrix.rows()[2], (3, 6, 9))
+
+        v4 = matrix @ v1
+        self.assertEqual(v4.values(), (30, 36, 42))

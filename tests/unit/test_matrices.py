@@ -17,12 +17,12 @@ class MatrixCreationTests(TestCase):
 
     def test_can_make_matrix_with_vectors(self):
         v1, v2 = Mock(Vector), Mock(Vector)
-        v1._values = [1, 3]
+        v1._values = [1, 3, 5]
         v1.__len__ = MagicMock()
-        v1.__len__.return_value = 2
-        v2._values = [2, 4]
+        v1.__len__.return_value = 3
+        v2._values = [2, 4, 6]
         matrix = Matrix(v1, v2)
-        self.assertEqual(matrix._rows, [[1, 2], [3, 4]])
+        self.assertEqual(matrix._rows, [[1, 2], [3, 4], [5, 6]])
 
 
     def test_all_need_to_be_vectors_if_they_are_to_be_used(self):
@@ -196,6 +196,17 @@ class MatrixMatMultiplicationTests(TestCase):
             matrix3 = matrix @ matrix2
 
 
+    def test_matrix_vector_multiplication(self):
+        matrix = Matrix([1, 2], [3, 4])
+        vector = Mock(Vector)
+        vector._values = [5, 6]
+        vector.__len__ = MagicMock()
+        vector.__len__.return_value = 2
+        output = matrix @ vector
+        self.assertIsInstance(output, Vector)
+        self.assertEqual(output._values, [17, 39])
+
+
 
 class MatrixWidthTests(TestCase):
 
@@ -221,7 +232,7 @@ class MatrixSizeTests(TestCase):
         mock_width.return_value = 50
         mock_height.return_value = 35
         matrix = Matrix([1, 2], [3, 4], [5, 6])
-        self.assertEqual(matrix.size(), (50, 35))
+        self.assertEqual(matrix.size(), (35, 50))
         mock_width.assert_called_with()
         mock_height.assert_called_with()
 

@@ -27,8 +27,9 @@ class Matrix:
                  "Either all Matrix args have to be Vectors, or none"
                 )
             args = [[
-             row._values[n] for row in args
-            ] for n in range(len(args))]
+             vector._values[n] for vector in args
+            ] for n in range(len(args[0]))]
+            width = len(args[0])
         for arg in args:
             try: iter(arg)
             except:
@@ -86,6 +87,8 @@ class Matrix:
 
 
     def __matmul__(self, other):
+        if isinstance(other, Vector):
+            other = Matrix(other)
         if not isinstance(other, Matrix):
             raise TypeError("{} is not a Matrix".format(other))
         if self.size()[1] != other.size()[0]:
@@ -101,6 +104,8 @@ class Matrix:
                  row[j] * other._rows[j][c] for j in range(len(other._rows))
                 ]))
             new_rows.append(new_row)
+        if len(new_rows[0]) == 1:
+            return Vector([r[0] for r in new_rows])
         return Matrix(*new_rows)
 
 
@@ -126,7 +131,7 @@ class Matrix:
 
         :rtype: ``tuple``"""
 
-        return (self.width(), self.height())
+        return (self.height(), self.width())
 
 
     def rows(self):
