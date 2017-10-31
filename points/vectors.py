@@ -1,6 +1,6 @@
 """Contains the Vector class."""
 
-from math import sqrt, acos, degrees
+from math import sqrt, sin, cos, acos, degrees
 from .geometry import degree_angle
 
 class Vector:
@@ -147,6 +147,12 @@ class Vector:
             component_values[index] = value
             components.append(Vector(*component_values))
         return tuple(components)
+
+
+    def rotate(self, angle):
+        from .matrices import Matrix
+        matrix = Matrix([cos(angle), -sin(angle)], [sin(angle), cos(angle)])
+        self._values = (matrix @ self)._values
 
 
     def distance_to(self, other):

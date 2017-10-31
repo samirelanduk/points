@@ -1,5 +1,6 @@
+from math import pi
 from unittest import TestCase
-from unittest.mock import Mock, patch
+from unittest.mock import Mock, patch, MagicMock
 from points.vectors import Vector
 
 class VectorCreationTests(TestCase):
@@ -241,6 +242,28 @@ class VectorComponentTests(TestCase):
         self.assertIsInstance(components[1], Vector)
         self.assertEqual(components[0]._values, [3, 0])
         self.assertEqual(components[1]._values, [0, 4])
+
+
+
+class VectorRotation(TestCase):
+
+    @patch("points.matrices.Matrix")
+    def test_can_do_2d_rotation(self, mock_matrix):
+        matrix = Mock(name="matrix")
+        vector = Mock(name="vector")
+        vector._values = [-4, 3]
+        matrix.__matmul__ = MagicMock()
+        matrix.__matmul__.return_value = vector
+        mock_matrix.return_value = matrix
+        v = Vector(3, 4)
+        v.rotate(pi / 2)
+        matrix_args = mock_matrix.call_args_list[0][0]
+        self.assertAlmostEqual(matrix_args[0][0], 0, delta=0.005)
+        self.assertAlmostEqual(matrix_args[0][1], -1, delta=0.005)
+        self.assertAlmostEqual(matrix_args[1][0], 1, delta=0.005)
+        self.assertAlmostEqual(matrix_args[1][1], 0, delta=0.005)
+        matrix.__matmul__.assert_called_with(v)
+        self.assertEqual(v._values, [-4, 3])
 
 
 

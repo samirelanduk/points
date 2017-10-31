@@ -1,4 +1,5 @@
 from unittest import TestCase
+from math import pi
 import points
 
 class VectorTests(TestCase):
@@ -38,6 +39,11 @@ class VectorTests(TestCase):
         self.assertEqual(v, 131)
         v = v1.cross(v2)
         self.assertEqual(v.values(), (275, 193, -342))
+
+        v2d = points.Vector(2, 2)
+        v2d.rotate(pi)
+        self.assertAlmostEqual(v2d.values()[0], -2, delta=0.005)
+        self.assertAlmostEqual(v2d.values()[1], -2, delta=0.005)
 
 
 
