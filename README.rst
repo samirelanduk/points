@@ -1,3 +1,12 @@
+.. |travis| image:: https://api.travis-ci.org/samirelanduk/points.svg?branch=0.3
+
+.. |coveralls| image:: https://coveralls.io/repos/github/samirelanduk/points/badge.svg?branch=0.3
+
+.. |pypi| image:: https://img.shields.io/pypi/pyversions/points.svg
+
+
+|travis| |coveralls| |pypi|
+
 points
 ======
 
@@ -26,7 +35,8 @@ points can be installed using pip:
 
 ``$ pip3 install points``
 
-points is written for Python 3, and does not support Python 2.
+points is written for Python 3, and does not support Python 2. It is tested on
+Python 3.5 and above.
 
 If you get permission errors, try using ``sudo``:
 
@@ -57,6 +67,9 @@ points is a library for performing geometry and linear algebra calculations.
 Linear Algebra
 ~~~~~~~~~~~~~~
 
+Vectors
+#######
+
 The ``Vector`` is the simplest linear algebra object. They can
 represent a point in space, or the attributes of an object.
 
@@ -69,7 +82,7 @@ represent a point in space, or the attributes of an object.
   >>> vector.length()
   3
 
-Not that 'length' here refers to the number of values in the Vector - to get the
+Note that 'length' here refers to the number of values in the Vector - to get the
 size of the line the Vector represents in space, you need the magnitude:
 
   >>> vector.magnitude()
@@ -121,9 +134,46 @@ with the dot product and angle between them:
   >>> vector.angle_with(vector2, degrees=True)
   50.99392854141668
 
+Matrices
+########
+
+A Matrix is a rectangular array of numbers, often used to represent linear
+transformations. They are created by passing in rows:
+
+  >>> matrix = points.Matrix([1, 2, 3], [4, 5, 6])
+  >>> matrix.rows()
+  ((1, 2, 3), (4, 5, 6))
+  >>> matrix.columns()
+  ((1, 4), (2, 5), (3, 6))
+
+You can also pass it vector, which will be interpreted as **columns**:
+
+  >>> col1 = points.Vector(1, 4, 7)
+  >>> col2 = points.Vector(2, 5, 8)
+  >>> col3 = points.Vector(3, 6, 9)
+  >>> matrix2 = points.Matrix(col1, col2, col3)
+  >>> matrix2.rows()
+  ((1, 2, 3), (4, 5, 6), (7, 8, 9))
+  >>> matrix2.columns()
+  ((1, 4, 7), (2, 5, 8), (3, 6, 9))
+
+You can add matrices togeher with ``+`` or multiply them by scalars with ``*``.
+The ``@`` operator is used to multiply a Matrix with another Matrix, or with a
+Vector.
+
 
 Changelog
 ---------
+
+Release 0.3.0
+~~~~~~~~~~~~~
+
+`31 October 2017`
+
+* Added Matrix class.
+* Added Matrix-Vector multiplication.
+* Implemented CI.
+
 
 Release 0.2.0
 ~~~~~~~~~~~~~

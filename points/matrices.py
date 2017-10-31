@@ -55,7 +55,7 @@ class Matrix:
         if not isinstance(other, Matrix):
             raise TypeError("{} is not a Matrix".format(other))
         if self.size() != other.size():
-            raise ValueError("{} and {} are different sizes".format(self, other))
+            raise ValueError("{} & {} are different sizes".format(self, other))
         rows = [[
          n1 + n2 for n1, n2 in zip(row1, row2)
         ] for row1, row2 in zip(self._rows, other._rows)]
@@ -66,7 +66,7 @@ class Matrix:
         if not isinstance(other, Matrix):
             raise TypeError("{} is not a Matrix".format(other))
         if self.size() != other.size():
-            raise ValueError("{} and {} are different sizes".format(self, other))
+            raise ValueError("{} & {} are different sizes".format(self, other))
         rows = [[
          n1 - n2 for n1, n2 in zip(row1, row2)
         ] for row1, row2 in zip(self._rows, other._rows)]
