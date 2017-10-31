@@ -45,6 +45,12 @@ class VectorTests(TestCase):
         self.assertAlmostEqual(v2d.values()[0], -2, delta=0.005)
         self.assertAlmostEqual(v2d.values()[1], -2, delta=0.005)
 
+        v3d = points.Vector(2, 3, 4)
+        v3d.rotate(pi, "x")
+        self.assertAlmostEqual(v3d.values()[0], 2, delta=0.005)
+        self.assertAlmostEqual(v3d.values()[1], -3, delta=0.005)
+        self.assertAlmostEqual(v3d.values()[2], -4, delta=0.005)
+
 
 
 class MatrixTests(TestCase):

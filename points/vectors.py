@@ -149,10 +149,48 @@ class Vector:
         return tuple(components)
 
 
-    def rotate(self, angle):
+    def rotate(self, angle, axis="x"):
+        """A 2 dimensional vector can be rotated by supplying an angle in
+        radians. A 3 dimensional vector can be rotated by supplying an angle in
+        radians and an axis to rotate around (``"x"``, ``"y"`` or ``"z"``).
+
+        All rotation is right handed. No vectors of other dimensions can
+        currently be rotated.
+
+        :param float angle: the angle to rotate by.
+        :param str axis: the axis to rotate around if in 3D.
+        :raises ValueError: if the vector length is not 2 or 3.
+        :raises ValueError: if axis given is invalid."""
+        
         from .matrices import Matrix
-        matrix = Matrix([cos(angle), -sin(angle)], [sin(angle), cos(angle)])
+        matrix = None
+        if len(self._values) == 2:
+            matrix = Matrix([cos(angle), -sin(angle)], [sin(angle), cos(angle)])
+        elif len(self._values) == 3:
+            if axis == "x":
+                matrix = Matrix(
+                 [1, 0, 0],
+                 [0, cos(angle), -sin(angle)],
+                 [0, sin(angle), cos(angle)]
+                )
+            elif axis == "y":
+                matrix = Matrix(
+                 [cos(angle), 0, sin(angle)],
+                 [0, 1, 0],
+                 [-1, 0, cos(angle)]
+                )
+            elif axis == "z":
+                matrix = Matrix(
+                 [cos(angle), -sin(angle), 0],
+                 [1, 0, 0],
+                 [0, 0, 1]
+                )
+            else:
+                raise ValueError("Axis '{}' is not z, y or z".format(axis))
+        else:
+            raise ValueError("Only 2 and 3 dimensional vectors can rotate")
         self._values = (matrix @ self)._values
+
 
 
     def distance_to(self, other):
