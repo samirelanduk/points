@@ -8,7 +8,7 @@ class Matrix:
     objects though, they will be interpreted as columns.
 
     They can be added and subtracted from each other, and multiplied by a scalar
-    using the `*` operator. To multiply a Matrix with another Matrix, use `@`.
+    using the `*` operator. To multiply a Matrix with another Matrix, use ``@``.
 
     :param iter args: The rows of the Matrix. Each row must be iterable.
     :raises ValueError: if you create an empty matrix.

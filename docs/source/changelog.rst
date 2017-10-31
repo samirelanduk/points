@@ -1,6 +1,16 @@
 Changelog
 ---------
 
+Release 0.3.0
+~~~~~~~~~~~~~
+
+`31 October 2017`
+
+* Added Matrix class.
+* Added Matrix-Vector multiplication.
+* Implemented CI.
+
+
 Release 0.2.0
 ~~~~~~~~~~~~~
 

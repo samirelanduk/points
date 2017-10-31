@@ -8,7 +8,8 @@ points can be installed using pip:
 
 ``$ pip3 install points``
 
-points is written for Python 3, and does not support Python 2.
+points is written for Python 3, and does not support Python 2. It is tested on
+Python 3.5 and above.
 
 If you get permission errors, try using ``sudo``:
 

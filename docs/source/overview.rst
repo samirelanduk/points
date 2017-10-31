@@ -6,6 +6,9 @@ points is a library for performing geometry and linear algebra calculations.
 Linear Algebra
 ~~~~~~~~~~~~~~
 
+Vectors
+#######
+
 The :py:class:`.Vector` is the simplest linear algebra object. They can
 represent a point in space, or the attributes of an object.
 
@@ -69,3 +72,30 @@ with the dot product and angle between them:
   0.8900119515744306
   >>> vector.angle_with(vector2, degrees=True)
   50.99392854141668
+
+Matrices
+########
+
+A Matrix is a rectangular array of numbers, often used to represent linear
+transformations. They are created by passing in rows:
+
+  >>> matrix = points.Matrix([1, 2, 3], [4, 5, 6])
+  >>> matrix.rows()
+  ((1, 2, 3), (4, 5, 6))
+  >>> matrix.columns()
+  ((1, 4), (2, 5), (3, 6))
+
+You can also pass it vector, which will be interpreted as **columns**:
+
+  >>> col1 = points.Vector(1, 4, 7)
+  >>> col2 = points.Vector(2, 5, 8)
+  >>> col3 = points.Vector(3, 6, 9)
+  >>> matrix2 = points.Matrix(col1, col2, col3)
+  >>> matrix2.rows()
+  ((1, 2, 3), (4, 5, 6), (7, 8, 9))
+  >>> matrix2.columns()
+  ((1, 4, 7), (2, 5, 8), (3, 6, 9))
+
+You can add matrices togeher with ``+`` or multiply them by scalars with ``*``.
+The ``@`` operator is used to multiply a Matrix with another Matrix, or with a
+Vector.
