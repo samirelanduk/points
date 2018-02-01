@@ -101,3 +101,15 @@ class MatrixTests(TestCase):
 
         v4 = matrix @ v1
         self.assertEqual(v4.values(), (30, 36, 42))
+
+
+    def test_matrix_determinant(self):
+        matrix2d = points.Matrix([1, 9], [2, 4])
+        self.assertEqual(matrix2d.determinant(), -14)
+        matrix3d = points.Matrix([9, 2, 3], [4, 15, 6], [0, 4, 11])
+        self.assertEqual(matrix3d.determinant(), 1229)
+        matrix4d = points.Matrix(
+         [1, 3, 5, 9], [1, 3, 1, 7], [4, 3, 9, 7], [5, 2, 0, 9]
+        )
+        self.assertEqual(matrix4d.determinant(), -376)
+

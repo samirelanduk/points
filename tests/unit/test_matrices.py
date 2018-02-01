@@ -251,3 +251,59 @@ class MatrixColumnsTests(TestCase):
     def test_can_get_columns(self):
         matrix = Matrix([1, 2], [3, 4], [5, 6])
         self.assertEqual(matrix.columns(), ((1, 3, 5), (2, 4, 6)))
+
+
+
+class MatrixSquareTests(TestCase):
+
+    @patch("points.matrices.Matrix.width")
+    @patch("points.matrices.Matrix.height")
+    def test_square_matrices(self, mock_height, mock_width):
+        mock_height.return_value = 4
+        mock_width.return_value = 4
+        matrix = Matrix([1, 2], [3, 4], [5, 6])
+        self.assertTrue(matrix.is_square())
+
+
+    @patch("points.matrices.Matrix.width")
+    @patch("points.matrices.Matrix.height")
+    def test_square_matrices(self, mock_height, mock_width):
+        mock_height.return_value = 4
+        mock_width.return_value = 3
+        matrix = Matrix([1, 2], [3, 4], [5, 6])
+        self.assertFalse(matrix.is_square())
+
+
+
+class MatrixDeterminantTests(TestCase):
+
+    def setUp(self):
+        self.patch1 = patch("points.matrices.Matrix.is_square")
+        self.patch2 = patch("points.matrices.Matrix.width")
+        self.mock_square = self.patch1.start()
+        self.mock_width = self.patch2.start()
+        self.mock_square.return_value = True
+
+
+    def tearDown(self):
+        self.patch1.stop()
+        self.patch2.stop()
+
+
+    def test_matrix_must_be_square(self):
+        matrix = Matrix([1, 2], [3, 4])
+        self.mock_square.return_value = False
+        with self.assertRaises(ValueError):
+            matrix.determinant()
+
+
+    def test_2d_matrix(self):
+        self.mock_width.return_value = 2
+        matrix = Matrix([1, 2], [3, 4])
+        self.assertEqual(matrix.determinant(), -2)
+
+
+    def test_3d_matrix(self):
+        self.mock_width.side_effect = [3, 2, 2, 2]
+        matrix = Matrix([4, -3, 0], [2, -1, 2], [1, 5, 7])
+        self.assertEqual(matrix.determinant(), -32)

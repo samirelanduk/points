@@ -150,3 +150,40 @@ class Matrix:
         return tuple([tuple([
          row[n] for row in self._rows
         ]) for n in range(len(self._rows[0]))])
+
+
+    def is_square(self):
+        """Checks if the number of rows equals the number of columns.
+
+        :rtype: ``bool``"""
+
+        return self.width() == self.height()
+
+
+    def determinant(self):
+        """Returns the determinant of the matrix - the matrix must be square for
+        this to happen.
+
+        The Laplace expansion is used to calculate matrices of three dimensions
+        and above.
+
+        :raises ValueError: if a non-square matrix is given.
+        :rtype: ``float``"""
+
+        if not self.is_square():
+            raise ValueError("{} is not square".format(self))
+        if self.width() == 2:
+            return ((self._rows[0][0] * self._rows[1][1])
+             - (self._rows[0][1] * self._rows[1][0]))
+        else:
+            products = []
+            for index, value in enumerate(self._rows[0]):
+                matrix = Matrix(*[
+                 [val for index2, val in enumerate(row) if index2 != index]
+                  for row in self._rows[1:]
+                ])
+                products.append(value * matrix.determinant())
+            det = 0
+            for index, product in enumerate(products):
+                det = det - product if index % 2 else det + product
+            return det
