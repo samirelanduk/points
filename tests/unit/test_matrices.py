@@ -254,6 +254,15 @@ class MatrixColumnsTests(TestCase):
 
 
 
+class MatrixTranspositionTests(TestCase):
+
+    def test_can_transpose_matrix(self):
+        matrix = Matrix([1, 2], [3, 4], [5, 6])
+        matrix_t = matrix.transposed()
+        self.assertEqual(matrix_t._rows, [[1, 3, 5], [2, 4, 6]])
+
+        
+
 class MatrixSquareTests(TestCase):
 
     @patch("points.matrices.Matrix.width")
@@ -307,3 +316,23 @@ class MatrixDeterminantTests(TestCase):
         self.mock_width.side_effect = [3, 2, 2, 2]
         matrix = Matrix([4, -3, 0], [2, -1, 2], [1, 5, 7])
         self.assertEqual(matrix.determinant(), -32)
+
+
+
+'''class MatrixInversionTests(TestCase):
+
+    def setUp(self):
+        self.patch1 = patch("points.matrices.Matrix.determinant")
+        self.mock_det = self.patch1.start()
+        self.mock_det.return_value = 5
+
+
+    def tearDown(self):
+        self.patch1.stop()
+
+
+    def test_determinant_must_be_non_zero(self):
+        matrix = Matrix([1, 2], [3, 4])
+        self.mock_det.return_value = 0
+        with self.assertRaises(ValueError):
+            matrix.inverse()'''

@@ -88,6 +88,10 @@ class MatrixTests(TestCase):
          (matrix2 @ matrix).rows(), ((276, 330, 384), (528, 645, 762), (474, 591, 708))
         )
 
+        self.assertEqual(
+         matrix.transposed().rows(), ((1, 4, 7), (2, 5, 8), (3, 6, 9))
+        )
+
 
     def test_matrices_with_vectors(self):
 
@@ -103,7 +107,7 @@ class MatrixTests(TestCase):
         self.assertEqual(v4.values(), (30, 36, 42))
 
 
-    def test_matrix_determinant(self):
+    def test_matrices_complicated_properties(self):
         matrix2d = points.Matrix([1, 9], [2, 4])
         self.assertEqual(matrix2d.determinant(), -14)
         matrix3d = points.Matrix([9, 2, 3], [4, 15, 6], [0, 4, 11])
@@ -112,4 +116,13 @@ class MatrixTests(TestCase):
          [1, 3, 5, 9], [1, 3, 1, 7], [4, 3, 9, 7], [5, 2, 0, 9]
         )
         self.assertEqual(matrix4d.determinant(), -376)
+
+
+    '''def test_matrix_inversion(self):
+        matrix2d = points.Matrix([4, 7], [2, 6])
+        inversion = matrix2d.inverse()
+        self.assertEqual(inversion.rows(), ((0.6, -0.7), (-0.2, 0.4)))
+        matrix3d = points.Matrix([7, 2, 1], [0, 3, -1], [-3, 4, -2])
+        inversion = matrix3d.inverse()
+        self.assertEqual(inversion.rows(), ((-2, 8, -1), (3, -11, 7), (9, -34, 21)))'''
 
