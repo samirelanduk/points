@@ -261,7 +261,7 @@ class MatrixTranspositionTests(TestCase):
         matrix_t = matrix.transposed()
         self.assertEqual(matrix_t._rows, [[1, 3, 5], [2, 4, 6]])
 
-        
+
 
 class MatrixSquareTests(TestCase):
 
@@ -281,6 +281,108 @@ class MatrixSquareTests(TestCase):
         mock_width.return_value = 3
         matrix = Matrix([1, 2], [3, 4], [5, 6])
         self.assertFalse(matrix.is_square())
+
+
+
+class MatrixMinorTests(TestCase):
+
+    def setUp(self):
+        self.patch1 = patch("points.matrices.Matrix.is_square")
+        self.patch2 = patch("points.matrices.Matrix.width")
+        self.mock_square = self.patch1.start()
+        self.mock_width = self.patch2.start()
+        self.mock_square.return_value = True
+
+
+    def tearDown(self):
+        self.patch1.stop()
+        self.patch2.stop()
+
+
+    def test_matrix_must_be_square(self):
+        matrix = Matrix([1, 2], [3, 4])
+        self.mock_square.return_value = False
+        with self.assertRaises(ValueError):
+            matrix.minor(0, 0)
+
+
+    def test_2d_matrix_minors(self):
+        self.mock_width.return_value = 2
+        matrix = Matrix([1, 2], [3, 4])
+        self.assertEqual(matrix.minor(0, 0), 4)
+        self.assertEqual(matrix.minor(0, 1), 3)
+        self.assertEqual(matrix.minor(1, 0), 2)
+        self.assertEqual(matrix.minor(1, 1), 1)
+
+
+
+class MatrixCofactorTests(TestCase):
+
+    def setUp(self):
+        self.patch1 = patch("points.matrices.Matrix.minor")
+        self.mock_minor = self.patch1.start()
+        self.mock_minor.return_value = 5
+
+
+    def tearDown(self):
+        self.patch1.stop()
+
+
+    def test_can_return_unaltered_minors(self):
+        matrix = Matrix([1, 2, 3], [4, 5, 6], [7, 8, 9])
+        self.assertEqual(matrix.cofactor(0, 0), 5)
+        self.assertEqual(matrix.cofactor(0, 2), 5)
+        self.assertEqual(matrix.cofactor(1, 1), 5)
+        self.assertEqual(matrix.cofactor(2, 0), 5)
+        self.assertEqual(matrix.cofactor(2, 0), 5)
+
+
+    def test_can_return_negative_minors(self):
+        matrix = Matrix([1, 2, 3], [4, 5, 6], [7, 8, 9])
+        self.assertEqual(matrix.cofactor(0, 1), -5)
+        self.assertEqual(matrix.cofactor(1, 0), -5)
+        self.assertEqual(matrix.cofactor(1, 2), -5)
+        self.assertEqual(matrix.cofactor(2, 1), -5)
+
+
+
+class MatrixMinorsTests(TestCase):
+
+    @patch("points.matrices.Matrix.minor")
+    def test_can_get_matrix_minors(self, mock_minor):
+        mock_minor.side_effect = [4, 8, 15, 16, 23, 42, 19, 20, 21]
+        matrix = Matrix([1, 2, 3], [4, 5, 6], [7, 8, 9])
+        minors = matrix.minors()
+        self.assertEqual(minors._rows, [[4, 8, 15], [16, 23, 42], [19, 20, 21]])
+        mock_minor.assert_any_call(0, 0)
+        mock_minor.assert_any_call(0, 1)
+        mock_minor.assert_any_call(0, 2)
+        mock_minor.assert_any_call(1, 0)
+        mock_minor.assert_any_call(1, 1)
+        mock_minor.assert_any_call(1, 2)
+        mock_minor.assert_any_call(2, 0)
+        mock_minor.assert_any_call(2, 1)
+        mock_minor.assert_any_call(2, 2)
+
+
+
+class MatrixCofactorsTests(TestCase):
+
+    @patch("points.matrices.Matrix.cofactor")
+    def test_can_get_matrix_minors(self, mock_cof):
+        mock_cof.side_effect = [4, 8, 15, 16, 23, 42, 19, 20, 21]
+        matrix = Matrix([1, 2, 3], [4, 5, 6], [7, 8, 9])
+        minors = matrix.cofactors()
+        self.assertEqual(minors._rows, [[4, 8, 15], [16, 23, 42], [19, 20, 21]])
+        mock_cof.assert_any_call(0, 0)
+        mock_cof.assert_any_call(0, 1)
+        mock_cof.assert_any_call(0, 2)
+        mock_cof.assert_any_call(1, 0)
+        mock_cof.assert_any_call(1, 1)
+        mock_cof.assert_any_call(1, 2)
+        mock_cof.assert_any_call(2, 0)
+        mock_cof.assert_any_call(2, 1)
+        mock_cof.assert_any_call(2, 2)
 
 
 

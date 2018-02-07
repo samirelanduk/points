@@ -109,7 +109,18 @@ class MatrixTests(TestCase):
 
     def test_matrices_complicated_properties(self):
         matrix2d = points.Matrix([1, 9], [2, 4])
+        self.assertEqual(matrix2d.minor(0, 0), 4)
+        self.assertEqual(matrix2d.minor(0, 1), 2)
+        self.assertEqual(matrix2d.minor(1, 0), 9)
+        self.assertEqual(matrix2d.minor(1, 1), 1)
+        self.assertEqual(matrix2d.cofactor(0, 0), 4)
+        self.assertEqual(matrix2d.cofactor(0, 1), -2)
+        self.assertEqual(matrix2d.cofactor(1, 0), -9)
+        self.assertEqual(matrix2d.cofactor(1, 1), 1)
+        self.assertEqual(matrix2d.minors().rows(), ((4, 2), (9, 1)))
+        self.assertEqual(matrix2d.cofactors().rows(), ((4, -2), (-9, 1)))
         self.assertEqual(matrix2d.determinant(), -14)
+        
         matrix3d = points.Matrix([9, 2, 3], [4, 15, 6], [0, 4, 11])
         self.assertEqual(matrix3d.determinant(), 1229)
         matrix4d = points.Matrix(

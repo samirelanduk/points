@@ -157,7 +157,7 @@ class Matrix:
         method is unaffected.
 
         :rtype: ``Matrix``"""
-        
+
         return Matrix(*map(list, zip(*self._rows)))
 
 
@@ -167,6 +167,53 @@ class Matrix:
         :rtype: ``bool``"""
 
         return self.width() == self.height()
+
+
+    def minor(self, i, j):
+        """Returns the first minor of the value at the position specified.
+
+        :param int i: The row to use.
+        :param int j: The column to use.
+        :raises ValueError: if a non-square matrix is given.
+        :rtype: ``float``"""
+
+        if not self.is_square():
+            raise ValueError("{} is not square".format(self))
+        if self.width() == 2:
+            return self._rows[1-i][1-j]
+
+
+    def cofactor(self, i, j):
+        """Returns the cofactor of the value at the position specified.
+
+        :param int i: The row to use.
+        :param int j: The column to use.
+        :raises ValueError: if a non-square matrix is given.
+        :rtype: ``float``"""
+
+        return self.minor(i, j) * ((-1) ** (i + j))
+
+
+    def minors(self):
+        """Returns the Matrix of minors for this matrix.
+
+        :raises ValueError: if a non-square matrix is given.
+        :rtype: ``Matrix``"""
+
+        return Matrix(*[[
+         self.minor(i, j) for j in range(len(row))
+        ] for i, row in enumerate(self._rows)])
+
+
+    def cofactors(self):
+        """Returns the Matrix of cofactors for this matrix.
+
+        :raises ValueError: if a non-square matrix is given.
+        :rtype: ``Matrix``"""
+
+        return Matrix(*[[
+         self.cofactor(i, j) for j in range(len(row))
+        ] for i, row in enumerate(self._rows)])
 
 
     def determinant(self):
