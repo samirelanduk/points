@@ -454,6 +454,19 @@ class MatrixDeterminantTests(TestCase):
 
 
 
+class MatrixAdjointTests(TestCase):
+
+    @patch("points.matrices.Matrix.cofactors")
+    def test_can_get_matrix_adjoint(self, mock_cof):
+        cofactors = Mock()
+        mock_cof.return_value = cofactors
+        cofactors.transposed.return_value = "TRANSPOSED"
+        matrix = Matrix([4, -3, 1], [2, -1, 2], [1, 5, 7])
+        self.assertEqual(matrix.adjoint(), "TRANSPOSED")
+        mock_cof.assert_called_with()
+        cofactors.transposed.assert_called_with()
+
+
 '''class MatrixInversionTests(TestCase):
 
     def setUp(self):

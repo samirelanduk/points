@@ -237,6 +237,15 @@ class Matrix:
         else:
             return sum([cell * self.cofactor(0, index) for index, cell
              in enumerate(self._rows[0])])
+
+
+    def adjoint(self):
+        """Returns the adjoin matrix of this matrix.
+
+        :raises ValueError: if a non-square matrix is given.
+        :rtype: ``Matrix``"""
+        
+        return self.cofactors().transposed()
     
 
 

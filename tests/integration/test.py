@@ -149,6 +149,10 @@ class MatrixTests(TestCase):
          ((141, -44, 16), (-10, 99, -36), (-33, -42, 127))
         )
         self.assertEqual(matrix3d.determinant(), 1229)
+        self.assertEqual(
+         matrix3d.adjoint().rows(),
+         ((141, -10, -33), (-44, 99, -42), (16, -36, 127))
+        )
 
         matrix4d = points.Matrix(
          [1, 3, 5, 9], [1, 3, 1, 7], [4, 3, 9, 7], [5, 2, 0, 9]
