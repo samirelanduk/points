@@ -181,6 +181,9 @@ class Matrix:
             raise ValueError("{} is not square".format(self))
         if self.width() == 2:
             return self._rows[1-i][1-j]
+        return Matrix(*[[
+         cell for c, cell in enumerate(row) if c != j
+        ] for r, row in enumerate(self.rows()) if r != i]).determinant()
 
 
     def cofactor(self, i, j):
@@ -232,17 +235,9 @@ class Matrix:
             return ((self._rows[0][0] * self._rows[1][1])
              - (self._rows[0][1] * self._rows[1][0]))
         else:
-            products = []
-            for index, value in enumerate(self._rows[0]):
-                matrix = Matrix(*[
-                 [val for index2, val in enumerate(row) if index2 != index]
-                  for row in self._rows[1:]
-                ])
-                products.append(value * matrix.determinant())
-            det = 0
-            for index, product in enumerate(products):
-                det = det - product if index % 2 else det + product
-            return det
+            return sum([cell * self.cofactor(0, index) for index, cell
+             in enumerate(self._rows[0])])
+    
 
 
     '''def inverse(self):

@@ -315,6 +315,34 @@ class MatrixMinorTests(TestCase):
         self.assertEqual(matrix.minor(1, 1), 1)
 
 
+    def test_3d_matrix_minors(self):
+        self.mock_width.return_value = 3
+        matrix = Matrix([1, 2, 3], [4, 5, 6], [7, 8, 9])
+        matrix_patch = patch("points.matrices.Matrix")
+        mock_matrix = matrix_patch.start()
+        try:
+            matrices2 = [Mock(), Mock(), Mock(), Mock(), Mock(), Mock()]
+            mock_matrix.side_effect = matrices2
+            for index, mat in enumerate(matrices2, start=1):
+                mat.determinant.return_value = index * 100
+            self.assertEqual(matrix.minor(0, 0), 100)
+            self.assertEqual(matrix.minor(0, 1), 200)
+            self.assertEqual(matrix.minor(1, 1), 300)
+            self.assertEqual(matrix.minor(1, 2), 400)
+            self.assertEqual(matrix.minor(2, 0), 500)
+            self.assertEqual(matrix.minor(2, 2), 600)
+            mock_matrix.assert_any_call([5, 6], [8, 9])
+            mock_matrix.assert_any_call([4, 6], [7, 9])
+            mock_matrix.assert_any_call([1, 3], [7, 9])
+            mock_matrix.assert_any_call([1, 2], [7, 8])
+            mock_matrix.assert_any_call([2, 3], [5, 6])
+            mock_matrix.assert_any_call([1, 2], [4, 5])
+            for mat in matrices2:
+                mat.determinant.assert_called_with()
+        finally:
+            matrix_patch.stop()
+
+
 
 class MatrixCofactorTests(TestCase):
 
@@ -414,10 +442,15 @@ class MatrixDeterminantTests(TestCase):
         self.assertEqual(matrix.determinant(), -2)
 
 
-    def test_3d_matrix(self):
-        self.mock_width.side_effect = [3, 2, 2, 2]
-        matrix = Matrix([4, -3, 0], [2, -1, 2], [1, 5, 7])
-        self.assertEqual(matrix.determinant(), -32)
+    @patch("points.matrices.Matrix.cofactor")
+    def test_3d_matrix(self, mock_cof):
+        self.mock_width.return_value = 3
+        mock_cof.side_effect = [16, -23, 42]
+        matrix = Matrix([4, -3, 1], [2, -1, 2], [1, 5, 7])
+        self.assertEqual(matrix.determinant(), 175)
+        mock_cof.assert_any_call(0, 0)
+        mock_cof.assert_any_call(0, 1)
+        mock_cof.assert_any_call(0, 2)
 
 
 

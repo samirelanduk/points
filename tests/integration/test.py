@@ -122,7 +122,34 @@ class MatrixTests(TestCase):
         self.assertEqual(matrix2d.determinant(), -14)
         
         matrix3d = points.Matrix([9, 2, 3], [4, 15, 6], [0, 4, 11])
+        self.assertEqual(matrix3d.minor(0, 0), 141)
+        self.assertEqual(matrix3d.minor(0, 1), 44)
+        self.assertEqual(matrix3d.minor(0, 2), 16)
+        self.assertEqual(matrix3d.minor(1, 0), 10)
+        self.assertEqual(matrix3d.minor(1, 1), 99)
+        self.assertEqual(matrix3d.minor(1, 2), 36)
+        self.assertEqual(matrix3d.minor(2, 0), -33)
+        self.assertEqual(matrix3d.minor(2, 1), 42)
+        self.assertEqual(matrix3d.minor(2, 2), 127)
+        self.assertEqual(matrix3d.cofactor(0, 0), 141)
+        self.assertEqual(matrix3d.cofactor(0, 1), -44)
+        self.assertEqual(matrix3d.cofactor(0, 2), 16)
+        self.assertEqual(matrix3d.cofactor(1, 0), -10)
+        self.assertEqual(matrix3d.cofactor(1, 1), 99)
+        self.assertEqual(matrix3d.cofactor(1, 2), -36)
+        self.assertEqual(matrix3d.cofactor(2, 0), -33)
+        self.assertEqual(matrix3d.cofactor(2, 1), -42)
+        self.assertEqual(matrix3d.cofactor(2, 2), 127)
+        self.assertEqual(
+         matrix3d.minors().rows(),
+         ((141, 44, 16), (10, 99, 36), (-33, 42, 127))
+        )
+        self.assertEqual(
+         matrix3d.cofactors().rows(),
+         ((141, -44, 16), (-10, 99, -36), (-33, -42, 127))
+        )
         self.assertEqual(matrix3d.determinant(), 1229)
+
         matrix4d = points.Matrix(
          [1, 3, 5, 9], [1, 3, 1, 7], [4, 3, 9, 7], [5, 2, 0, 9]
         )
