@@ -467,20 +467,25 @@ class MatrixAdjointTests(TestCase):
         cofactors.transposed.assert_called_with()
 
 
-'''class MatrixInversionTests(TestCase):
 
-    def setUp(self):
-        self.patch1 = patch("points.matrices.Matrix.determinant")
-        self.mock_det = self.patch1.start()
-        self.mock_det.return_value = 5
+class MatrixAdjointTests(TestCase):
+
+    @patch("points.matrices.Matrix.adjoint")
+    @patch("points.matrices.Matrix.determinant")
+    def test_can_get_matrix_inverse(self, mock_det, mock_adjoint):
+        adjoint = Mock()
+        mock_adjoint.return_value = 3
+        mock_det.return_value = 0.25
+        matrix = Matrix([4, -3, 1], [2, -1, 2], [1, 5, 7])
+        self.assertEqual(matrix.inverse(), 12)
+        mock_adjoint.assert_called_with()
+        mock_det.assert_called_with()
 
 
-    def tearDown(self):
-        self.patch1.stop()
-
-
-    def test_determinant_must_be_non_zero(self):
-        matrix = Matrix([1, 2], [3, 4])
-        self.mock_det.return_value = 0
+    @patch("points.matrices.Matrix.determinant")
+    def test_no_inverse_if_zero_det(self, mock_det):
+        mock_det.return_value = 0
+        matrix = Matrix([4, -3, 1], [2, -1, 2], [1, 5, 7])
         with self.assertRaises(ValueError):
-            matrix.inverse()'''
+            matrix.inverse()
+

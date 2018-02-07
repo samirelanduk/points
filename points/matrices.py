@@ -244,16 +244,17 @@ class Matrix:
 
         :raises ValueError: if a non-square matrix is given.
         :rtype: ``Matrix``"""
-        
+
         return self.cofactors().transposed()
     
 
+    def inverse(self):
+        """Returns the inverse matrix of this matrix.
 
-    '''def inverse(self):
-        if not self.determinant():
+        :raises ValueError: if the matrix is not invertible.
+        :rtype: ``Matrix``"""
+        
+        det = self.determinant()
+        if not det:
             raise ValueError("{} has no inverse: determinant is 0".format(self))
-        for r_index, row in enumerate(self._rows):
-            cofactor_row = []
-            for c_index, cell in enumerate(row):
-                new_rows = [[cell2 for c_index2, cell2 in enumerate(row) if c_index2 != c_index] for row2, r_index2 in enumerate(self._rows) if r_index2 != r_index]
-                print(new_rows)'''
+        return self.adjoint() * (1 / self.determinant())
