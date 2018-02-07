@@ -43,8 +43,27 @@ class Matrix:
             self._rows.append(list(arg))
 
 
+    @staticmethod
+    def identity(dimensions):
+        """Creates an identity matrix.
+
+        :param int dimensions: the size of the identity matrix to create.
+        :raises TypeError: if non-integer dimension is given.
+        :rtype: ``Matrix``"""
+
+        if not isinstance(dimensions, int):
+            raise TypeError("Dimensions must be int, not {}".format(dimensions))
+        return Matrix(*[[
+         1 if j == i else 0 for j in range(dimensions)
+        ] for i in range(dimensions)])
+
+
     def __repr__(self):
         return "<{}×{} Matrix>".format(*self.size())
+
+
+    def __eq__(self, other):
+        return isinstance(other, Matrix) and self._rows == other._rows
 
 
     def __contains__(self, item):
@@ -253,7 +272,7 @@ class Matrix:
 
         :raises ValueError: if the matrix is not invertible.
         :rtype: ``Matrix``"""
-        
+
         det = self.determinant()
         if not det:
             raise ValueError("{} has no inverse: determinant is 0".format(self))

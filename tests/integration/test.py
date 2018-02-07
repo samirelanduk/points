@@ -158,18 +158,11 @@ class MatrixTests(TestCase):
          matrix3d.inverse().rows(),
          ((-2, 8, -5), (3, -11, 7), (9, -34, 21))
         )
+        self.assertEqual(
+         matrix3d.inverse() @ matrix3d, points.Matrix.identity(3)
+        )
 
         matrix4d = points.Matrix(
          [1, 3, 5, 9], [1, 3, 1, 7], [4, 3, 9, 7], [5, 2, 0, 9]
         )
         self.assertEqual(matrix4d.determinant(), -376)
-
-
-    '''def test_matrix_inversion(self):
-        matrix2d = points.Matrix([4, 7], [2, 6])
-        inversion = matrix2d.inverse()
-        self.assertEqual(inversion.rows(), ((0.6, -0.7), (-0.2, 0.4)))
-        matrix3d = points.Matrix([7, 2, 1], [0, 3, -1], [-3, 4, -2])
-        inversion = matrix3d.inverse()
-        self.assertEqual(inversion.rows(), ((-2, 8, -1), (3, -11, 7), (9, -34, 21)))'''
-

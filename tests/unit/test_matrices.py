@@ -59,6 +59,23 @@ class MatrixCreationTests(TestCase):
 
 
 
+class IdentityMatrixTests(TestCase):
+
+    def test_can_get_identity_matrix(self):
+        i = Matrix.identity(1)
+        self.assertEqual(i._rows, [[1]])
+        i = Matrix.identity(2)
+        self.assertEqual(i._rows, [[1, 0], [0, 1]])
+        i = Matrix.identity(3)
+        self.assertEqual(i._rows, [[1, 0, 0], [0, 1, 0], [0, 0, 1]])
+
+
+    def test_dimensions_must_be_int(self):
+        with self.assertRaises(TypeError):
+            Matrix.identity(1.4)
+
+
+
 class MatrixReprTests(TestCase):
 
     @patch("points.matrices.Matrix.size")
@@ -79,6 +96,27 @@ class MatrixContainerTests(TestCase):
     def test_items_not_in_matrix(self):
         matrix = Matrix([1, 2], [3, 4], [5, 6])
         self.assertNotIn(8, matrix)
+
+
+
+class MatrixEqualityTests(TestCase):
+
+    def test_matrices_equal(self):
+        self.assertEqual(
+         Matrix([1, 2], [3, 4]), Matrix([1, 2], [3, 4])
+        )
+
+
+    def test_matrices_not_equal(self):
+        self.assertNotEqual(
+         Matrix([1, 2], [3, 4]), Matrix([1, 9], [3, 4])
+        )
+        self.assertNotEqual(
+         Matrix([1, 2], [3, 4]), Matrix([1, 2, 9], [3, 4, 9])
+        )
+        self.assertNotEqual(
+         Matrix([1, 2, 9], [3, 4, 9]), Matrix([1, 2], [3, 4])
+        )
 
 
 
