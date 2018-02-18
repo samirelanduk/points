@@ -161,7 +161,7 @@ class Vector:
         :param str axis: the axis to rotate around if in 3D.
         :raises ValueError: if the vector length is not 2 or 3.
         :raises ValueError: if axis given is invalid."""
-        
+
         from .matrices import Matrix
         matrix = None
         if len(self._values) == 2:
@@ -177,12 +177,12 @@ class Vector:
                 matrix = Matrix(
                  [cos(angle), 0, sin(angle)],
                  [0, 1, 0],
-                 [-1, 0, cos(angle)]
+                 [-sin(angle), 0, cos(angle)]
                 )
             elif axis == "z":
                 matrix = Matrix(
                  [cos(angle), -sin(angle), 0],
-                 [1, 0, 0],
+                 [sin(angle), cos(angle), 0],
                  [0, 0, 1]
                 )
             else:

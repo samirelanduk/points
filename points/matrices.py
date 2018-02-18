@@ -128,7 +128,6 @@ class Matrix:
         return Matrix(*new_rows)
 
 
-
     def width(self):
         """Returns the Matrix width - how many columns it has.
 

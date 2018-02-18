@@ -46,10 +46,18 @@ class VectorTests(TestCase):
         self.assertAlmostEqual(v2d.values()[1], -2, delta=0.005)
 
         v3d = points.Vector(2, 3, 4)
-        v3d.rotate(pi, "x")
+        v3d.rotate(pi / 4, "x")
         self.assertAlmostEqual(v3d.values()[0], 2, delta=0.005)
-        self.assertAlmostEqual(v3d.values()[1], -3, delta=0.005)
-        self.assertAlmostEqual(v3d.values()[2], -4, delta=0.005)
+        self.assertAlmostEqual(v3d.values()[1], -0.7071, delta=0.005)
+        self.assertAlmostEqual(v3d.values()[2], 4.949, delta=0.005)
+        v3d.rotate(pi / 8, "y")
+        self.assertAlmostEqual(v3d.values()[0], 3.741, delta=0.005)
+        self.assertAlmostEqual(v3d.values()[1], -0.7071, delta=0.005)
+        self.assertAlmostEqual(v3d.values()[2], 3.807, delta=0.005)
+        v3d.rotate(pi * (-3/8), "z")
+        self.assertAlmostEqual(v3d.values()[0], 0.778, delta=0.005)
+        self.assertAlmostEqual(v3d.values()[1], -3.727, delta=0.005)
+        self.assertAlmostEqual(v3d.values()[2], 3.807, delta=0.005)
 
 
 
@@ -120,7 +128,7 @@ class MatrixTests(TestCase):
         self.assertEqual(matrix2d.minors().rows(), ((4, 2), (9, 1)))
         self.assertEqual(matrix2d.cofactors().rows(), ((4, -2), (-9, 1)))
         self.assertEqual(matrix2d.determinant(), -14)
-        
+
         matrix3d = points.Matrix([9, 2, 3], [4, 15, 6], [0, 4, 11])
         self.assertEqual(matrix3d.minor(0, 0), 141)
         self.assertEqual(matrix3d.minor(0, 1), 44)
