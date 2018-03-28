@@ -33,6 +33,19 @@ class MatrixTests(TestCase):
         self.assertEqual(matrix.size(), (2, 4))
         self.assertFalse(matrix.is_square())
 
+        # Matrix rank
+        self.assertEqual(matrix.rank(), 2)
+        self.assertTrue(matrix.is_full_rank())
+        matrix = points.Matrix([1, 5], [3, 15])
+        self.assertEqual(matrix.rank(), 1)
+        self.assertFalse(matrix.is_full_rank())
+        matrix = points.Matrix([1, 0, 1], [-2, -3, 1], [3, 3, 0])
+        self.assertEqual(matrix.rank(), 2)
+        self.assertFalse(matrix.is_full_rank())
+        matrix = points.Matrix([1, 0, 1], [-2, -3, 1], [3, 3, 9])
+        self.assertEqual(matrix.rank(), 3)
+        self.assertTrue(matrix.is_full_rank())
+
         # 2D Matrix minors, cofactors, and determinant
         matrix2d = points.Matrix([1, 9], [2, 4])
         self.assertEqual(matrix2d.minor(0, 0), 4)

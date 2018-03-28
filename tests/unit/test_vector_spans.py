@@ -145,3 +145,13 @@ class VectorSpanDimensionTests(VectorSpanTest):
     def test_can_get_span_dimension(self):
         span = VectorSpan(self.v1)
         self.assertEqual(span.dimension(), span._dimension)
+
+
+
+class VectorSpanRankTests(VectorSpanTest):
+
+    def test_can_get_span_rank(self):
+        span = VectorSpan(self.v1)
+        self.assertEqual(span.rank(), 1)
+        span._vectors = range(10)
+        self.assertEqual(span.rank(), 10)

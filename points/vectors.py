@@ -245,6 +245,18 @@ class VectorSpan:
         :rtype: ``int``"""
 
         return self._dimension
+
+
+    def rank(self):
+        """The dimensions of the space the VectorSpan spans - regardless of the
+        overall Vector Space it inhabits.
+
+        For example a Vector Span in three dimensional space might have a rank
+        of 2 if it only spans a plane within that space.
+
+        :rtype: ``int``"""
+        
+        return len(self._vectors)
 '''
 
 , sin, cos, acos, degrees

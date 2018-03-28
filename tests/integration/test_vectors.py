@@ -105,8 +105,7 @@ class VectorTests(TestCase):
         self.assertIn(v1, span)
         self.assertIn(v2, span)
         self.assertNotIn(points.Vector(5, 23, 17.1), span)
-
-        '''self.assertIn(points.Vector(10 - 42, 46 + 12, 34 - 27), span)
+        self.assertIn(points.Vector(10 - 42, 46 + 12, 34 - 27), span)
         self.assertNotIn(points.Vector(1, 2, 3), span)
         self.assertNotIn(points.Vector(14, -4), span)
-        self.assertNotIn(points.Vector(14, -4, 0), span)'''
+        self.assertNotIn(points.Vector(14, -4, 0), span)

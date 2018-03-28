@@ -559,6 +559,33 @@ class MatrixColumnSpaceTests(TestCase):
 
 
 
+class MatrixRankTests(TestCase):
+
+    @patch("points.matrices.Matrix.column_space")
+    def test_can_get_matrix_rank(self, mock_space):
+        space = Mock()
+        space.rank.return_value = 400
+        mock_space.return_value = space
+        m = Matrix([3, 5, 9], [2, 3, 5])
+        self.assertEqual(m.rank(), 400)
+        mock_space.assert_called_with()
+        space.rank.assert_called_with()
+
+
+
+class MatrixFullRankTests(TestCase):
+
+    @patch("points.matrices.Matrix.rank")
+    def test_can_get_matrix_rank(self, mock_rank):
+        mock_rank.return_value = 400
+        m = Matrix([3, 5, 9], [2, 3, 5])
+        self.assertFalse(m.is_full_rank())
+        mock_rank.assert_called_with()
+        mock_rank.return_value = 2
+        self.assertTrue(m.is_full_rank())
+
+
+
 class MatrixGaussianEliminationTests(TestCase):
 
     def test_can_gaussian_eliminate_square_matrices(self):

@@ -281,8 +281,25 @@ class Matrix:
         by its column vectors.
 
         :rtype: ``VectorSpan``"""
-        
+
         return VectorSpan(*[Vector(col) for col in self.columns()])
+
+
+    def rank(self):
+        """The dimensions of the matrix's column space.
+
+        :rtype: ``int``"""
+
+        return self.column_space().rank()
+
+
+    def is_full_rank(self):
+        """Checks if the matrix is full rank - that is, whether its rank equals
+        the number of dimensions of its column space.
+
+        :rtype: ``bool``"""
+        
+        return self.rank() == len(self._rows)
 
 
 
