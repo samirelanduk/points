@@ -108,6 +108,13 @@ class MatrixTests(TestCase):
         )
         self.assertEqual(matrix4d.determinant(), -376)
 
+        # Echelon form
+        self.assertFalse(points.Matrix([1, 3, -1], [9, 1, 7]).is_row_echelon())
+        self.assertTrue(points.Matrix([1, 3, -1], [0, 1, 7]).is_row_echelon())
+        self.assertTrue(points.Matrix([1, 4, -3, 7], [0, 1, 6, 2], [0, 0, 1, 5]).is_row_echelon())
+        self.assertFalse(points.Matrix([1, 4, -3, 7], [0, 1, 6, 2], [0, 0, 1, 5]).is_reduced_row_echelon())
+        self.assertTrue(points.Matrix([1, 0, 0, 4], [0, 1, 0, 7], [0, 0, 1, -1]).is_reduced_row_echelon())
+
 
     def test_multiple_matrices(self):
         # Matrix equality
@@ -162,8 +169,15 @@ class MatrixVectorTests(TestCase):
         self.assertEqual(space.dimension(), 3)
         self.assertIn(points.Vector(1, 2, 3), space)
         self.assertIn(points.Vector(19, -2.05, 309), space)
-
         space = points.Matrix([1, 0, 2], [0, 1, 1], [0, 0, 0]).column_space()
         self.assertEqual(space.dimension(), 3)
         self.assertIn(points.Vector(1, 2, 0), space)
         self.assertNotIn(points.Vector(1, 2, 3), space)
+
+        # Matrix null space
+        '''null_space = matrix.null_space()
+        self.assertIn(points.Vector(0, 0, 0), null_space)
+        for x in range(1, 6):
+            for y in range(1, 6):
+                for z in range(1, 6):
+                    self.assertNotIn(points.Vector(x, y, z), null_space)'''

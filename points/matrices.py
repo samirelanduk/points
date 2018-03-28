@@ -1,5 +1,6 @@
 """Contains the Matrix class."""
 
+from fractions import Fraction
 from .vectors import Vector, VectorSpan
 
 class Matrix:
@@ -298,14 +299,23 @@ class Matrix:
         the number of dimensions of its column space.
 
         :rtype: ``bool``"""
-        
+
         return self.rank() == len(self._rows)
+
+
+    '''def null_space(self):
+        if self.is_full_rank():
+            return VectorSpan(Vector(*([0] * len(self._rows))))'''
 
 
 
 
     def gauss(self):
-        from fractions import Fraction
+        """Performs Gaussian elimination on the matrix, changing it in place,
+        and putting it into row echelon form (not *reduced* row echelon form).
+
+        This is useful in solving systems of linear equations."""
+
         r, c = 0, 0
         while r < len(self._rows) and c < len(self._rows[0]):
             mx = max([[i, abs(self._rows[i][c])]
@@ -318,13 +328,16 @@ class Matrix:
                 f = Fraction(self._rows[i][c]) / Fraction(self._rows[r][c])
                 self._rows[i][c] = 0
                 for j in range(c + 1, len(self._rows[0])):
-                    self._rows[i][j] = self._rows[i][j] - self._rows[c][j] * f
-            r += 1
-            c += 1
+                    self._rows[i][j] -= self._rows[c][j] * f
+            r, c = r + 1, c + 1
         self._rows = [[float(val) for val in row] for row in self._rows]
 
 
     def is_row_echelon(self):
+        """Checks to see if the matrix is in row echelon form.
+
+        :rtype: ``bool``"""
+
         in_zero, lead = False, -1
         for row in self._rows:
             if set(row) == {0}:
@@ -338,9 +351,18 @@ class Matrix:
 
 
     def is_reduced_row_echelon(self):
+        """Checks to see if the matrix is in reduced row echelon form.
+
+        :rtype: ``bool``"""
+
         if not self.is_row_echelon(): return False
         for row in self._rows:
             if set(row) != {0}:
-                if set(row) != {0, 1}: return False
-                if 1 in row and row.count(1) != 1: return False
+                for i, val in enumerate(row):
+                    if val != 0:
+                        if val != 1: return False
+                        column = [row[i] for row in self._rows]
+                        if set(column) != {1, 0}: return False
+                        if column.count(1) != 1: return False
+                        break
         return True

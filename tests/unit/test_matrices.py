@@ -585,6 +585,27 @@ class MatrixFullRankTests(TestCase):
         self.assertTrue(m.is_full_rank())
 
 
+'''
+class MatrixNullSpaceTests(TestCase):
+
+    @patch("points.matrices.Matrix.is_full_rank")
+    @patch("points.matrices.VectorSpan")
+    @patch("points.matrices.Vector")
+    def test_null_space_is_zero_when_full_rank(self, mock_vec, mock_span, mock_full):
+        mock_full.return_value = True
+        mock_vec.return_value = "VECTOR"
+        mock_span.return_value = "SPAN"
+        m = Matrix([1, 2], [3, 4])
+        space = m.null_space()
+        mock_full.assert_called_with()
+        mock_vec.assert_called_with(0, 0)
+        mock_span.assert_called_with("VECTOR")
+        self.assertEqual(space, "SPAN")
+        m = Matrix([1, 2, 12], [3, 4, 9], [1, 6, 4], [3, 5, 6], [0, 0, 1])
+        m.null_space()
+        mock_vec.assert_called_with(0, 0, 0, 0, 0)'''
+
+
 
 class MatrixGaussianEliminationTests(TestCase):
 
@@ -594,22 +615,30 @@ class MatrixGaussianEliminationTests(TestCase):
         self.assertEqual(m._rows, [[3, 5, 9], [0, -1 / 3, -1]])
         m = Matrix([2, 1, -1, 8], [-3, -1, 2, -11], [-2, 1, 2, -3])
         m.gauss()
-        self.assertEqual(m._rows, [[-3, -1, 2, -11], [0, 5 / 3, 2 / 3, 13 / 3], [0, 0, 1 / 5, -1 / 5]])
+        self.assertEqual(m._rows, [
+         [-3, -1, 2, -11], [0, 5 / 3, 2 / 3, 13 / 3], [0, 0, 1 / 5, -1 / 5]
+        ])
         m = Matrix([1, -1, -1, 1], [3, 2, 12, 1], [2, -1, 1, 1])
         m.gauss()
-        self.assertEqual(m._rows, [[3, 2, 12, 1], [0, -7 / 3, -7, 1 / 3], [0, 0, 0, 3 / 7]])
+        self.assertEqual(m._rows, [
+         [3, 2, 12, 1], [0, -7 / 3, -7, 1 / 3], [0, 0, 0, 3 / 7]
+        ])
 
 
     def test_can_gaussian_eliminate_vertical_matrices(self):
         m = Matrix([3, 5, 9], [2, 3, 5], [4, 6, 8], [3, 6, 7], [1, 2, 3])
         m.gauss()
-        self.assertEqual(m._rows, [[4, 6, 8], [0, 3 / 2, 1], [0, 0, 8 / 3], [0, 0, 0], [0, 0, 0]])
+        self.assertEqual(m._rows, [
+         [4, 6, 8], [0, 3 / 2, 1], [0, 0, 8 / 3], [0, 0, 0], [0, 0, 0]
+        ])
 
 
     def test_can_gaussian_eliminate_horizontal_matrices(self):
         m = Matrix([3, 5, 9, 2, 3, 5], [4, 6, 8, 3, 6, 7])
         m.gauss()
-        self.assertEqual(m._rows, [[4, 6, 8, 3, 6, 7], [0, 0.5, 3, -0.25, -1.5, -0.25]])
+        self.assertEqual(m._rows, [
+         [4, 6, 8, 3, 6, 7], [0, 0.5, 3, -0.25, -1.5, -0.25]
+        ])
 
 
 
@@ -636,7 +665,9 @@ class MatrixReducedRowEchelonFormCheckTests(TestCase):
     @patch("points.matrices.Matrix.is_row_echelon")
     def test_check_row_echelon_first(self, mock_check):
         mock_check.return_value = False
-        self.assertFalse(Matrix([1, 0], [0, 1], [0, 0]).is_reduced_row_echelon())
+        self.assertFalse(
+         Matrix([1, 0], [0, 1], [0, 0]).is_reduced_row_echelon()
+        )
         mock_check.assert_called_with()
 
 
@@ -645,6 +676,12 @@ class MatrixReducedRowEchelonFormCheckTests(TestCase):
         mock_check.return_value = True
         self.assertTrue(Matrix([1, 0], [0, 1], [0, 0]).is_reduced_row_echelon())
         mock_check.assert_called_with()
-        self.assertFalse(Matrix([1, 0], [0, 2], [0, 0]).is_reduced_row_echelon())
-        self.assertFalse(Matrix([1, 0, 0], [0, 1, 1], [0, 0, 0]).is_reduced_row_echelon())
-        self.assertTrue(Matrix([1, 0, 0], [0, 0, 1], [0, 0, 0]).is_reduced_row_echelon())
+        self.assertFalse(
+         Matrix([1, 0], [0, 2], [0, 0]).is_reduced_row_echelon()
+        )
+        self.assertFalse(
+         Matrix([1, 0, 0], [0, 1, 1], [0, 0, 1]).is_reduced_row_echelon()
+        )
+        self.assertTrue(
+         Matrix([1, 0, 0], [0, 0, 1], [0, 0, 0]).is_reduced_row_echelon()
+        )
