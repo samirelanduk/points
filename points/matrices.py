@@ -1,6 +1,6 @@
 """Contains the Matrix class."""
 
-from .vectors import Vector
+from .vectors import Vector, VectorSpan
 
 class Matrix:
     """A Matrix is a rectangular array of numbers. They are created from
@@ -274,6 +274,15 @@ class Matrix:
         if not det:
             raise ValueError("{} has no inverse: determinant is 0".format(self))
         return self.adjoint() * (1 / self.determinant())
+
+
+    def column_space(self):
+        """Returns the column space of matrix - the set of vectors reachable
+        by its column vectors.
+
+        :rtype: ``VectorSpan``"""
+        
+        return VectorSpan(*[Vector(col) for col in self.columns()])
 
 
 

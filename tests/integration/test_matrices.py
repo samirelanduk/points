@@ -97,6 +97,7 @@ class MatrixTests(TestCase):
 
 
     def test_multiple_matrices(self):
+        # Matrix equality
         self.assertEqual(
          points.Matrix([1, 2], [3, 4]), points.Matrix([1, 2], [3, 4])
         )
@@ -104,6 +105,7 @@ class MatrixTests(TestCase):
          points.Matrix([1, 2], [3, 4]), points.Matrix([1, 2], [3, 1])
         )
 
+        # Matrix arithmetic
         matrix = points.Matrix([1, 2, 3], (4, 5, 6), [7, 8, 9])
         matrix2 = points.Matrix([11, 12, 31], (41, 15, 61), [17, 81, 19])
         self.assertEqual(
@@ -130,10 +132,25 @@ class MatrixTests(TestCase):
 class MatrixVectorTests(TestCase):
 
     def test_matrix_and_vectors(self):
+        # Matrix from vector
         vector = points.Vector(1, 2, 3)
         matrix = points.Matrix(vector, (4, 5, 6), (7, 8, 9))
         self.assertEqual(matrix.rows()[0], (1, 2, 3))
         self.assertEqual(matrix.rows()[1], (4, 5, 6))
+        self.assertEqual(matrix.rows()[2], (7, 8, 9))
 
+        # Matrix-vector multiplication
         v2 = matrix.transposed() @ vector
         self.assertEqual(v2.values(), (30, 36, 42))
+
+        # Matrix column space
+        matrix = points.Matrix([1, 8, 2], [0, 1, 1], [1, 9, 2])
+        space = matrix.column_space()
+        self.assertEqual(space.dimension(), 3)
+        self.assertIn(points.Vector(1, 2, 3), space)
+        self.assertIn(points.Vector(19, -2.05, 309), space)
+
+        space = points.Matrix([1, 0, 2], [0, 1, 1], [0, 0, 0]).column_space()
+        self.assertEqual(space.dimension(), 3)
+        self.assertIn(points.Vector(1, 2, 0), space)
+        self.assertNotIn(points.Vector(1, 2, 3), space)

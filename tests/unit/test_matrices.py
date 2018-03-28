@@ -539,6 +539,26 @@ class MatrixInversionTests(TestCase):
 
 
 
+class MatrixColumnSpaceTests(TestCase):
+
+    @patch("points.matrices.Matrix.columns")
+    @patch("points.matrices.Vector")
+    @patch("points.matrices.VectorSpan")
+    def test_can_get_matrix_column_space(self, mock_span, mock_vec, mock_col):
+        mock_col.return_value = ((3, 2), (5, 3), (9, 5))
+        mock_vec.side_effect = ("v1", "v2", "v3")
+        mock_span.return_value = "SPAN"
+        m = Matrix([3, 5, 9], [2, 3, 5])
+        space = m.column_space()
+        mock_col.assert_called_with()
+        mock_vec.assert_any_call((3, 2))
+        mock_vec.assert_any_call((5, 3))
+        mock_vec.assert_any_call((9, 5))
+        mock_span.assert_called_with("v1", "v2", "v3")
+        self.assertEqual(space, "SPAN")
+
+
+
 class MatrixGaussianEliminationTests(TestCase):
 
     def test_can_gaussian_eliminate_square_matrices(self):
