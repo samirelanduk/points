@@ -328,6 +328,59 @@ class VectorSpanWithTests(TestCase):
 
 
 
+class VectorDotProductTests(TestCase):
+
+    def test_can_get_dot_product(self):
+        vector1 = Vector(-6, 8)
+        vector2 = Mock(Vector)
+        vector2._values = [5, 12]
+        vector2.length.return_value = 2
+        self.assertEqual(vector1.dot(vector2), 66)
+
+
+    def test_dot_product_requires_vector(self):
+        vector1 = Vector(-6, -8)
+        with self.assertRaises(TypeError):
+            vector1.dot("vector")
+
+
+    def test_dot_product_requires_equal_length(self):
+        vector1 = Vector(-6, 8)
+        vector2 = Mock(Vector)
+        vector2.length.return_value = 3
+        with self.assertRaises(ValueError):
+            vector1.dot(vector2)
+
+
+
+class VectorCrossProductTests(TestCase):
+
+    def test_can_get_cross_product(self):
+        vector1 = Vector(3, -3, 1)
+        vector2 = Mock(Vector)
+        vector2._values = [4, 9, 2]
+        self.assertEqual(vector1.cross(vector2)._values, [-15, -2, 39])
+
+
+    def test_cross_product_requires_vector(self):
+        vector1 = Vector(-6, -8)
+        with self.assertRaises(TypeError):
+            vector1.cross("vector")
+
+
+    def test_cross_product_requires_length_3(self):
+        vector1 = Vector(-6, 8)
+        vector2 = Mock(Vector)
+        vector2._values = [4, 9, 2]
+        with self.assertRaises(ValueError):
+            vector1.cross(vector2)
+        vector1 = Vector(3, -3, 1)
+        vector2._values = [4, 9]
+        with self.assertRaises(ValueError):
+            vector1.cross(vector2)
+
+
+
 
 
 '''
@@ -451,52 +504,11 @@ class VectorDistanceTests(TestCase):
 
 
 
-class VectorDotProductTests(TestCase):
-
-    def test_can_get_dot_product(self):
-        vector1 = Vector(-6, 8)
-        vector2 = Mock(Vector)
-        vector2._values = [5, 12]
-        vector2.length.return_value = 2
-        self.assertEqual(vector1.dot(vector2), 66)
-
-
-    def test_dot_product_requires_vector(self):
-        vector1 = Vector(-6, -8)
-        with self.assertRaises(TypeError):
-            vector1.dot("vector")
-
-
-    def test_dot_product_requires_equal_length(self):
-        vector1 = Vector(-6, 8)
-        vector2 = Mock(Vector)
-        vector2.length.return_value = 3
-        with self.assertRaises(ValueError):
-            vector1.dot(vector2)
 
 
 
-class VectorCrossProductTests(TestCase):
-
-    def test_can_get_cross_product(self):
-        vector1 = Vector(3, -3, 1)
-        vector2 = Mock(Vector)
-        vector2._values = [4, 9, 2]
-        self.assertEqual(vector1.cross(vector2)._values, [-15, -2, 39])
 
 
-    def test_cross_product_requires_vector(self):
-        vector1 = Vector(-6, -8)
-        with self.assertRaises(TypeError):
-            vector1.cross("vector")
-
-
-    def test_cross_product_requires_length_3(self):
-        vector1 = Vector(-6, 8)
-        vector2 = Mock(Vector)
-        vector2._values = [4, 9, 2]
-        with self.assertRaises(ValueError):
-            vector1.cross(vector2)
 
 
 

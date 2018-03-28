@@ -75,6 +75,10 @@ class VectorTests(TestCase):
         self.assertEqual(v.values(), (-9, 27, 8))
         v = v1 * 10
         self.assertEqual(v.values(), (50, 230, 170))
+        v = v1.dot(v2)
+        self.assertEqual(v, 131)
+        v = v1.cross(v2)
+        self.assertEqual(v.values(), (275, 193, -342))
 
         # Vector span - one dimension
         v1, v2 = points.Vector(4), points.Vector(-3)
