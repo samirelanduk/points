@@ -4,8 +4,7 @@ from .vectors import Vector
 
 class Matrix:
     """A Matrix is a rectangular array of numbers. They are created from
-    iterables, which will be interpeted as rows. If you pass :py:class:`.Vector`
-    objects though, they will be interpreted as columns.
+    iterables, which will be interpeted as rows unless specified otherwise.
 
     They can be added and subtracted from each other, and multiplied by a scalar
     using the `*` operator. To multiply a Matrix with another Matrix, use ``@``.
@@ -16,31 +15,18 @@ class Matrix:
     :raises TypeError: if you give non iterables.
     :raises ValueError: if you give rows of different lengths."""
 
-    def __init__(self, *args):
-        self._rows = []
-        try: width = len(args[0])
-        except:
-            raise ValueError("Matrix cannot be empty")
-        if any([isinstance(arg, Vector) for arg in args]):
-            if not all([isinstance(arg, Vector) for arg in args]):
-                raise TypeError(
-                 "Either all Matrix args have to be Vectors, or none"
-                )
-            args = [[
-             vector._values[n] for vector in args
-            ] for n in range(len(args[0]))]
-            width = len(args[0])
-        for arg in args:
-            try: iter(arg)
-            except:
-                raise TypeError("Matrix row {} is not iterable".format(arg))
-            if len(arg) != width:
-                raise ValueError(
-                 "Matrix row {} is not length {}".format(arg, width)
-                )
-            if any(not isinstance(element, (int, float)) for element in arg):
-                raise TypeError("row {} has non-numeric values".format(arg))
-            self._rows.append(list(arg))
+    def __init__(self, *rows, columns=False):
+        rows_ = []
+        for row in rows:
+            try:
+                rows_.append(list(row))
+            except TypeError:
+                raise TypeError("{} is not iterable".format(row))
+        if len(set(len(row) for row in rows_)) != 1:
+            raise ValueError("Cannot make Matrix with unequal rows")
+        if columns:
+            rows_ = [[col[n] for col in rows_] for n in range(len(rows_[0]))]
+        self._rows = rows_
 
 
     @staticmethod
@@ -62,12 +48,23 @@ class Matrix:
         return "<{}×{} Matrix>".format(*self.size())
 
 
-    def __eq__(self, other):
-        return isinstance(other, Matrix) and self._rows == other._rows
+    def __str__(self):
+        strings = [[str(val) for val in row] for row in self._rows]
+        max_length = max([max([len(val) for val in row]) for row in strings])
+        return "\n".join([
+         " ".join([val.rjust(max_length) for val in row
+        ]) for row in strings])
 
 
     def __contains__(self, item):
-        return any([item in row for row in self._rows])
+        for row in self._rows:
+            if item in row:
+                return True
+        return False
+
+
+    def __eq__(self, other):
+        return isinstance(other, Matrix) and self._rows == other._rows
 
 
     def __add__(self, other):
@@ -75,10 +72,9 @@ class Matrix:
             raise TypeError("{} is not a Matrix".format(other))
         if self.size() != other.size():
             raise ValueError("{} & {} are different sizes".format(self, other))
-        rows = [[
+        return Matrix(*[[
          n1 + n2 for n1, n2 in zip(row1, row2)
-        ] for row1, row2 in zip(self._rows, other._rows)]
-        return Matrix(*rows)
+        ] for row1, row2 in zip(self._rows, other._rows)])
 
 
     def __sub__(self, other):
@@ -86,10 +82,9 @@ class Matrix:
             raise TypeError("{} is not a Matrix".format(other))
         if self.size() != other.size():
             raise ValueError("{} & {} are different sizes".format(self, other))
-        rows = [[
+        return Matrix(*[[
          n1 - n2 for n1, n2 in zip(row1, row2)
-        ] for row1, row2 in zip(self._rows, other._rows)]
-        return Matrix(*rows)
+        ] for row1, row2 in zip(self._rows, other._rows)])
 
 
     def __mul__(self, other):
@@ -107,15 +102,20 @@ class Matrix:
 
     def __matmul__(self, other):
         if isinstance(other, Vector):
-            other = Matrix(other)
+            if self.size()[1] != len(other):
+                raise ValueError(
+                 "{} and {} dimensions incompatible".format(self, other)
+                )
+            return Vector(*[sum(
+             val * other.values()[i] for i, val in enumerate(row)
+            ) for row in self._rows])
         if not isinstance(other, Matrix):
             raise TypeError("{} is not a Matrix".format(other))
         if self.size()[1] != other.size()[0]:
             raise ValueError(
              "{} and {} dimensions incompatible".format(self, other)
             )
-        new_rows = []
-        other_columns = other.columns()
+        new_rows, other_columns = [], other.columns()
         for row in self._rows:
             new_row = []
             for c in range(len(other_columns)):
@@ -123,8 +123,6 @@ class Matrix:
                  row[j] * other._rows[j][c] for j in range(len(other._rows))
                 ]))
             new_rows.append(new_row)
-        if len(new_rows[0]) == 1:
-            return Vector([r[0] for r in new_rows])
         return Matrix(*new_rows)
 
 
@@ -170,6 +168,14 @@ class Matrix:
         ]) for n in range(len(self._rows[0]))])
 
 
+    def is_square(self):
+        """Checks if the number of rows equals the number of columns.
+
+        :rtype: ``bool``"""
+
+        return self.width() == self.height()
+
+
     def transposed(self):
         """Returns a transposed version of the matrix. The matrix calling the
         method is unaffected.
@@ -177,14 +183,6 @@ class Matrix:
         :rtype: ``Matrix``"""
 
         return Matrix(*map(list, zip(*self._rows)))
-
-
-    def is_square(self):
-        """Checks if the number of rows equals the number of columns.
-
-        :rtype: ``bool``"""
-
-        return self.width() == self.height()
 
 
     def minor(self, i, j):
@@ -264,7 +262,7 @@ class Matrix:
         :rtype: ``Matrix``"""
 
         return self.cofactors().transposed()
-    
+
 
     def inverse(self):
         """Returns the inverse matrix of this matrix.
@@ -276,3 +274,47 @@ class Matrix:
         if not det:
             raise ValueError("{} has no inverse: determinant is 0".format(self))
         return self.adjoint() * (1 / self.determinant())
+
+
+
+
+    def gauss(self):
+        from fractions import Fraction
+        r, c = 0, 0
+        while r < len(self._rows) and c < len(self._rows[0]):
+            mx = max([[i, abs(self._rows[i][c])]
+             for i in range(r, len(self._rows))], key=lambda x: x[1])[0]
+            if self._rows[mx][c] == 0:
+                c += 1
+            else:
+                self._rows[r], self._rows[mx] = self._rows[mx], self._rows[r]
+            for i in range(r + 1, len(self._rows)):
+                f = Fraction(self._rows[i][c]) / Fraction(self._rows[r][c])
+                self._rows[i][c] = 0
+                for j in range(c + 1, len(self._rows[0])):
+                    self._rows[i][j] = self._rows[i][j] - self._rows[c][j] * f
+            r += 1
+            c += 1
+        self._rows = [[float(val) for val in row] for row in self._rows]
+
+
+    def is_row_echelon(self):
+        in_zero, lead = False, -1
+        for row in self._rows:
+            if set(row) == {0}:
+                in_zero = True
+            else:
+                lead_coefficient_pos = row.index(list(filter(bool, row))[0])
+                if lead_coefficient_pos <= lead: return False
+                lead = lead_coefficient_pos
+            if in_zero and not set(row) == {0}: return False
+        return True
+
+
+    def is_reduced_row_echelon(self):
+        if not self.is_row_echelon(): return False
+        for row in self._rows:
+            if set(row) != {0}:
+                if set(row) != {0, 1}: return False
+                if 1 in row and row.count(1) != 1: return False
+        return True

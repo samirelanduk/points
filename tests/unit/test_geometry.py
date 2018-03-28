@@ -1,4 +1,4 @@
-from unittest import TestCase
+'''from unittest import TestCase
 from math import pi
 from points.geometry import degree_angle
 
@@ -11,3 +11,4 @@ class AngleDecoratorTests(TestCase):
         self.assertEqual(angle(), pi)
         self.assertEqual(angle(degrees=False), pi)
         self.assertEqual(angle(degrees=True), 180)
+'''

@@ -1,4 +1,3 @@
-from math import pi
 from unittest import TestCase
 from unittest.mock import Mock, patch, MagicMock
 from points.vectors import Vector
@@ -22,17 +21,32 @@ class VectorCreationTests(TestCase):
         self.assertEqual(vector._values, [2])
 
 
-    def test_vector_values_must_be_numeric(self):
-        with self.assertRaises(TypeError):
-            vector = Vector([2, "5", 1])
-
-
 
 class VectorReprTests(TestCase):
 
     def test_vector_repr(self):
         vector = Vector(2, 5, 1)
-        self.assertEqual(str(vector), "<Vector [2, 5, 1]>")
+        self.assertEqual(repr(vector), "<Vector [2, 5, 1]>")
+
+
+
+class VectorStrTests(TestCase):
+
+    @patch("points.vectors.Vector.__repr__")
+    def test_vector_str(self, mock_repr):
+        mock_repr.return_value = "xxxxx"
+        vector = Vector(2, 5, 1)
+        self.assertEqual(str(vector), "xxxxx")
+        self.assertTrue(mock_repr.called)
+
+
+    @patch("points.vectors.Vector.__repr__")
+    def test_long_vector_str(self, mock_repr):
+        vector = Vector(range(1, 11))
+        self.assertEqual(
+         str(vector), "<Vector [1, 2, (...6 items omitted...), 9, 10]>"
+        )
+        self.assertFalse(mock_repr.called)
 
 
 
@@ -55,6 +69,23 @@ class VectorIndexingGettingTests(TestCase):
 
 
 
+class VectorIndexingSettingTests(TestCase):
+
+    def test_can_set_vector_index(self):
+        vector = Vector(2, 5, 1)
+        vector[0] = 4
+        vector[1] = 6
+        vector[2] = 8
+        self.assertEqual(vector._values, [4, 6, 8])
+
+
+    def test_cannot_set_vector_out_of_index(self):
+        vector = Vector(2, 5, 1)
+        with self.assertRaises(IndexError):
+            vector[3] = 9
+
+
+
 class VectorLenTests(TestCase):
 
     def test_can_get_vector_len(self):
@@ -63,29 +94,27 @@ class VectorLenTests(TestCase):
 
 
 
+class VectorIterationTests(TestCase):
+
+    def test_vector_is_iterable(self):
+        vector = Vector(2, 5, 1)
+        self.assertEqual(list(iter(vector)), vector._values)
+
+
+
 class VectorAdditionTests(TestCase):
 
-    @patch("points.vectors.Vector.length")
-    def test_can_add_vectors(self, mock_length):
-        vector = Vector(2, 5, 1)
-        vector2 = Mock(Vector)
-        mock_length.return_value = 3
-        vector2.length.return_value = 3
-        vector2._values = [1, 2, 3]
-        vector3 = vector + vector2
-        self.assertIsInstance(vector3, Vector)
-        self.assertEqual(vector3._values, [3, 7, 4])
+    def setUp(self):
+        self.vector2 = Mock(Vector)
+        self.patch1 = patch("points.vectors.Vector.__len__")
+        self.mock_length = self.patch1.start()
+        self.mock_length.return_value = 9
+        self.vector2.__len__, self.vector2.__len__.return_value = MagicMock(), 9
+        self.vector2._values = [10, 20, 30]
 
 
-    @patch("points.vectors.Vector.length")
-    def test_cant_add_vectors_of_different_length(self, mock_length):
-        vector = Vector(2, 5, 1)
-        vector2 = Mock(Vector)
-        mock_length.return_value = 3
-        vector2.length.return_value = 2
-        vector2._values = [1, 2, 3]
-        with self.assertRaises(ValueError):
-            vector + vector2
+    def tearDown(self):
+        self.patch1.stop()
 
 
     def test_can_only_add_vectors(self):
@@ -94,30 +123,34 @@ class VectorAdditionTests(TestCase):
             vector + "vector"
 
 
+    def test_cannot_add_vectors_of_different_length(self):
+        self.vector2.__len__.return_value = 8
+        vector = Vector(2, 5, 1)
+        self.mock_length.return_value = 3
+        with self.assertRaises(ValueError):
+            vector + self.vector2
+
+
+    def test_can_add_vectors(self):
+        vector = Vector(2, 5, 1)
+        new = vector + self.vector2
+        self.assertEqual(new._values, [12, 25, 31])
+
+
 
 class VectorSubtractionTests(TestCase):
 
-    @patch("points.vectors.Vector.length")
-    def test_can_subtract_vectors(self, mock_length):
-        vector = Vector(2, 5, 1)
-        vector2 = Mock(Vector)
-        mock_length.return_value = 3
-        vector2.length.return_value = 3
-        vector2._values = [1, 2, 3]
-        vector3 = vector - vector2
-        self.assertIsInstance(vector3, Vector)
-        self.assertEqual(vector3._values, [1, 3, -2])
+    def setUp(self):
+        self.vector2 = Mock(Vector)
+        self.patch1 = patch("points.vectors.Vector.__len__")
+        self.mock_length = self.patch1.start()
+        self.mock_length.return_value = 9
+        self.vector2.__len__, self.vector2.__len__.return_value = MagicMock(), 9
+        self.vector2._values = [1, 2, 3]
 
 
-    @patch("points.vectors.Vector.length")
-    def test_cant_subtract_vectors_of_different_length(self, mock_length):
-        vector = Vector(2, 5, 1)
-        vector2 = Mock(Vector)
-        mock_length.return_value = 3
-        vector2.length.return_value = 2
-        vector2._values = [1, 2, 3]
-        with self.assertRaises(ValueError):
-            vector - vector2
+    def tearDown(self):
+        self.patch1.stop()
 
 
     def test_can_only_subtract_vectors(self):
@@ -126,21 +159,33 @@ class VectorSubtractionTests(TestCase):
             vector - "vector"
 
 
+    def test_cannot_subtract_vectors_of_different_length(self):
+        self.vector2.__len__.return_value = 8
+        vector = Vector(2, 5, 1)
+        self.mock_length.return_value = 3
+        with self.assertRaises(ValueError):
+            vector - self.vector2
+
+
+    def test_can_subtract_vectors(self):
+        vector = Vector(2, 5, 1)
+        new = vector - self.vector2
+        self.assertEqual(new._values, [1, 3, -2])
+
+
 
 class VectorScalarMultiplicationTests(TestCase):
 
     def test_can_multiply_vector_by_scalar(self):
         vector = Vector(2, 5, 1)
-        vector2 = vector * 3
-        self.assertIsInstance(vector2, Vector)
-        self.assertEqual(vector2._values, [6, 15, 3])
+        new = vector * 3
+        self.assertEqual(new._values, [6, 15, 3])
 
 
     def test_can_multiply_scalar_by_vector(self):
         vector = Vector(2, 5, 1)
-        vector2 = 3 * vector
-        self.assertIsInstance(vector2, Vector)
-        self.assertEqual(vector2._values, [6, 15, 3])
+        new = 3 * vector
+        self.assertEqual(new._values, [6, 15, 3])
 
 
     def test_only_scalar_multiplication_allowed(self):
@@ -168,18 +213,20 @@ class VectorValuesTests(TestCase):
 
 
 
-class VectorValueAdditionTests(TestCase):
+class VectorMagnitudeTests(TestCase):
+
+    def test_can_get_vector_magnitude(self):
+        vector = Vector(3, 4)
+        self.assertEqual(vector.magnitude(), 5)
+
+
+
+class VectorValueAppendingTests(TestCase):
 
     def test_can_add_value(self):
         vector = Vector(2, 5, 1)
-        vector.add(12)
+        vector.append(12)
         self.assertEqual(vector._values, [2, 5, 1, 12])
-
-
-    def test_can_only_add_numbers(self):
-        vector = Vector(2, 5, 1)
-        with self.assertRaises(TypeError):
-            vector.add("12")
 
 
 
@@ -189,12 +236,6 @@ class VectorValueInsertionTests(TestCase):
         vector = Vector(2, 5, 1)
         vector.insert(1, 12)
         self.assertEqual(vector._values, [2, 12, 5, 1])
-
-
-    def test_can_only_insert_numbers(self):
-        vector = Vector(2, 5, 1)
-        with self.assertRaises(TypeError):
-            vector.insert(1, "12")
 
 
 
@@ -224,24 +265,74 @@ class ValuePoppingTests(TestCase):
 
 
 
-class VectorMagnitudeTests(TestCase):
-
-    def test_can_get_vector_magnitude(self):
-        vector = Vector(3, 4)
-        self.assertEqual(vector.magnitude(), 5)
-
-
-
 class VectorComponentTests(TestCase):
 
     def test_can_get_vector_components(self):
         vector = Vector(3, 4)
         components = vector.components()
         self.assertEqual(len(components), 2)
-        self.assertIsInstance(components[0], Vector)
-        self.assertIsInstance(components[1], Vector)
         self.assertEqual(components[0]._values, [3, 0])
         self.assertEqual(components[1]._values, [0, 4])
+
+
+
+class VectorLinearDependenceTests(TestCase):
+
+    @patch("points.vectors.VectorSpan")
+    def test_can_check_linear_dependence(self, mock_span):
+        vector = Vector(3, 4)
+        v2, v3 = Mock(Vector), Mock(Vector)
+        mock_span.return_value = [vector]
+        self.assertTrue(vector.linearly_dependent_on(v2, v3))
+        mock_span.assert_called_with(v2, v3)
+        mock_span.return_value = []
+        self.assertFalse(vector.linearly_dependent_on(v2, v3))
+
+
+
+class VectorLinearIndependenceTests(TestCase):
+
+    @patch("points.vectors.Vector.linearly_dependent_on")
+    def test_can_check_linear_independence(self, mock_dep):
+        mock_dep.return_value = True
+        vector = Vector(3, 4)
+        v2, v3 = Mock(Vector), Mock(Vector)
+        self.assertFalse(vector.linearly_independent_of(v2, v3))
+        mock_dep.assert_called_with(v2, v3)
+        mock_dep.return_value = False
+        self.assertTrue(vector.linearly_independent_of(v2, v3))
+        mock_dep.assert_called_with(v2, v3)
+
+
+
+class VectorSpanTests(TestCase):
+
+    @patch("points.vectors.VectorSpan")
+    def test_can_get_span(self, mock_span):
+        mock_span.return_value = "SPAN"
+        vector = Vector(3, 4)
+        self.assertEqual(vector.span(), "SPAN")
+        mock_span.assert_called_with(vector)
+
+
+
+class VectorSpanWithTests(TestCase):
+
+    @patch("points.vectors.VectorSpan")
+    def test_can_get_span(self, mock_span):
+        mock_span.return_value = "SPAN"
+        vector = Vector(3, 4)
+        v2, v3 = Mock(Vector), Mock(Vector)
+        self.assertEqual(vector.span_with(v2, v3), "SPAN")
+        mock_span.assert_called_with(vector, v2, v3)
+
+
+
+
+
+'''
+
+
 
 
 
@@ -435,3 +526,4 @@ class VectorAngleWithTests(TestCase):
         vector2.length.return_value = 3
         with self.assertRaises(ValueError):
             vector1.angle_with(vector2)
+'''

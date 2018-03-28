@@ -3,7 +3,15 @@ from unittest.mock import Mock, patch, MagicMock
 from points.matrices import Matrix
 from points.vectors import Vector
 
-class MatrixCreationTests(TestCase):
+class MatrixTest(TestCase):
+
+    def setUp(self):
+        self.vector1 = Mock(Vector)
+        self.vector2 = Mock(Vector)
+        self.vector1.values.return_value = (3, 4)
+
+
+class MatrixCreationTests(MatrixTest):
 
     def test_can_make_matrix(self):
         matrix = Matrix([1, 2], [3, 4])
@@ -15,35 +23,10 @@ class MatrixCreationTests(TestCase):
         self.assertEqual(matrix._rows, [[1, 2], [3, 4]])
 
 
-    def test_can_make_matrix_with_vectors(self):
-        v1, v2 = Mock(Vector), Mock(Vector)
-        v1._values = [1, 3, 5]
-        v1.__len__ = MagicMock()
-        v1.__len__.return_value = 3
-        v2._values = [2, 4, 6]
-        matrix = Matrix(v1, v2)
-        self.assertEqual(matrix._rows, [[1, 2], [3, 4], [5, 6]])
-
-
-    def test_all_need_to_be_vectors_if_they_are_to_be_used(self):
-        v1 = Mock(Vector)
-        v1._values = [1, 3]
-        v1.__len__ = MagicMock()
-        v1.__len__.return_value = 2
-        with self.assertRaises(TypeError):
-            Matrix(v1, [2, 4])
-
-
-    def test_cannot_make_matrix_from_none_iterables(self):
+    def test_matrix_rows_must_be_iterable(self):
         with self.assertRaises(TypeError) as e:
             Matrix([1, 2], (3, 4), 789)
         self.assertIn("789 is not iterable", str(e.exception))
-
-
-    def test_matrix_elements_must_be_numeric(self):
-        with self.assertRaises(TypeError) as e:
-            Matrix([1, 2], (3, "4"))
-        Matrix([1, 2], (3, 4.5))
 
 
     def test_rows_must_be_equal_length(self):
@@ -53,9 +36,9 @@ class MatrixCreationTests(TestCase):
             Matrix([1, 2], (3, 4, 5))
 
 
-    def test_matrix_cannot_be_empty(self):
-        with self.assertRaises(ValueError):
-            Matrix()
+    def test_can_make_matrix_with_columns(self):
+        matrix = Matrix([1, 2], (0.1, 0.2), [3, 4], columns=True)
+        self.assertEqual(matrix._rows, [[1, 0.1, 3], [2, 0.2, 4]])
 
 
 
@@ -82,7 +65,20 @@ class MatrixReprTests(TestCase):
     def test_matrix_repr(self, mock_size):
         mock_size.return_value = (12, 43)
         matrix = Matrix([1, 2], [3, 4], [5, 6])
-        self.assertEqual(str(matrix), "<12×43 Matrix>")
+        self.assertEqual(repr(matrix), "<12×43 Matrix>")
+
+
+
+class MatrixStrTests(TestCase):
+
+    def test_matrix_str_simple(self):
+        matrix = Matrix([1, 2], [3, 4], [5, 6])
+        self.assertEqual(str(matrix), "1 2\n3 4\n5 6")
+
+
+    def test_matrix_str_different_widths(self):
+        matrix = Matrix([1, 2, 3.5], [4.002, 5, 6])
+        self.assertEqual(str(matrix), "    1     2   3.5\n4.002     5     6")
 
 
 
@@ -91,10 +87,6 @@ class MatrixContainerTests(TestCase):
     def test_items_in_matrix(self):
         matrix = Matrix([1, 2], [3, 4], [5, 6])
         self.assertIn(4, matrix)
-
-
-    def test_items_not_in_matrix(self):
-        matrix = Matrix([1, 2], [3, 4], [5, 6])
         self.assertNotIn(8, matrix)
 
 
@@ -117,20 +109,24 @@ class MatrixEqualityTests(TestCase):
         self.assertNotEqual(
          Matrix([1, 2, 9], [3, 4, 9]), Matrix([1, 2], [3, 4])
         )
+        self.assertNotEqual(
+         Matrix([1, 2, 9], [3, 4, 9]), "other"
+        )
 
 
 
 class MatrixAdditionTests(TestCase):
 
-    @patch("points.matrices.Matrix.size")
-    def test_can_add_matrices(self, mock_size):
-        matrix = Matrix([1, 2], [3, 4], [5, 6])
-        mock_size.return_value = (3, 2)
-        matrix2 = Mock(Matrix)
-        matrix2._rows = [[10, 20], [30, 40], [50, 60]]
-        matrix2.size.return_value = (3, 2)
-        matrix3 = matrix + matrix2
-        self.assertEqual(matrix3._rows, [[11, 22], [33, 44], [55, 66]])
+    def setUp(self):
+        self.matrix2 = Mock(Matrix)
+        self.matrix2._rows = [[10, 20], [30, 40], [50, 60]]
+        self.patch1 = patch("points.matrices.Matrix.size")
+        self.mock_size = self.patch1.start()
+        self.mock_size.return_value = self.matrix2.size.return_value = (3, 2)
+
+
+    def tearDown(self):
+        self.patch1.stop()
 
 
     def test_can_only_add_matrices(self):
@@ -139,28 +135,32 @@ class MatrixAdditionTests(TestCase):
             matrix + [1, 2, 3]
 
 
-    @patch("points.matrices.Matrix.size")
-    def test_matrix_addition_needs_equal_size(self, mock_size):
-        mock_size.return_value = (3, 4)
+    def test_matrix_addition_needs_equal_size(self):
         matrix = Matrix([1, 2], [3, 4], [5, 6])
-        matrix2 = Mock(Matrix)
-        matrix2.size.return_value = (4, 3)
+        self.matrix2.size.return_value = (4, 3)
         with self.assertRaises(ValueError):
-            matrix + matrix2
+            matrix + self.matrix2
+
+
+    def test_can_add_matrices(self):
+        matrix = Matrix([1, 2], [3, 4], [5, 6])
+        matrix3 = matrix + self.matrix2
+        self.assertEqual(matrix3._rows, [[11, 22], [33, 44], [55, 66]])
 
 
 
 class MatrixSubtractionTests(TestCase):
 
-    @patch("points.matrices.Matrix.size")
-    def test_can_subtract_matrices(self, mock_size):
-        matrix = Matrix([1, 2], [3, 4], [5, 6])
-        mock_size.return_value = (3, 2)
-        matrix2 = Mock(Matrix)
-        matrix2._rows = [[10, 20], [30, 40], [50, 60]]
-        matrix2.size.return_value = (3, 2)
-        matrix3 = matrix - matrix2
-        self.assertEqual(matrix3._rows, [[-9, -18], [-27, -36], [-45, -54]])
+    def setUp(self):
+        self.matrix2 = Mock(Matrix)
+        self.matrix2._rows = [[10, 20], [30, 40], [50, 60]]
+        self.patch1 = patch("points.matrices.Matrix.size")
+        self.mock_size = self.patch1.start()
+        self.mock_size.return_value = self.matrix2.size.return_value = (3, 2)
+
+
+    def tearDown(self):
+        self.patch1.stop()
 
 
     def test_can_only_subtract_matrices(self):
@@ -169,17 +169,21 @@ class MatrixSubtractionTests(TestCase):
             matrix - [1, 2, 3]
 
 
-    @patch("points.matrices.Matrix.size")
-    def test_matrix_subtraction_needs_equal_size(self, mock_size):
-        mock_size.return_value = (3, 4)
+    def test_matrix_subtraction_needs_equal_size(self):
         matrix = Matrix([1, 2], [3, 4], [5, 6])
-        matrix2 = Mock(Matrix)
-        matrix2.size.return_value = (4, 3)
+        self.matrix2.size.return_value = (4, 3)
         with self.assertRaises(ValueError):
-            matrix - matrix2
+            matrix - self.matrix2
 
 
-class MatrixMultiplicationTests(TestCase):
+    def test_can_subtract_matrices(self):
+        matrix = Matrix([1, 2], [3, 4], [5, 6])
+        matrix3 = matrix - self.matrix2
+        self.assertEqual(matrix3._rows, [[-9, -18], [-27, -36], [-45, -54]])
+
+
+
+class MatrixScalarMultiplicationTests(TestCase):
 
     def test_can_multiply_matrix_by_number(self):
         matrix = Matrix([1, 2], [3, 4], [5, 6])
@@ -199,50 +203,6 @@ class MatrixMultiplicationTests(TestCase):
             matrix * [1, 2, 3]
         with self.assertRaises(TypeError):
             [1, 2, 3] * matrix
-
-
-
-class MatrixMatMultiplicationTests(TestCase):
-
-    @patch("points.matrices.Matrix.size")
-    def test_can_mat_mul_matrices(self, mock_size):
-        matrix = Matrix([1, 2], [3, 4], [5, 6])
-        mock_size.return_value = (3, 2)
-        matrix2 = Mock(Matrix)
-        matrix2._rows = [[10, 20, 30], [40, 50, 60]]
-        matrix2.columns.return_value = ((10, 40), (20, 50), (30, 60))
-        matrix2.size.return_value = (2, 3)
-        matrix3 = matrix @ matrix2
-        self.assertEqual(matrix3._rows, [[90, 120, 150], [190, 260, 330], [290, 400, 510]])
-
-
-    def test_can_only_matmul_matrices(self):
-        matrix = Matrix([1, 2], [3, 4], [5, 6])
-        with self.assertRaises(TypeError):
-            matrix @ 100
-
-
-    @patch("points.matrices.Matrix.size")
-    def test_matrix_dimensions_must_match(self, mock_size):
-        matrix = Matrix([1, 2], [3, 4], [5, 6])
-        mock_size.return_value = (3, 2)
-        matrix2 = Mock(Matrix)
-        matrix2._rows = [[10, 20, 30], [40, 50, 60]]
-        matrix2.columns.return_value = ((10, 40), (20, 50), (30, 60))
-        matrix2.size.return_value = (3, 3)
-        with self.assertRaises(ValueError):
-            matrix3 = matrix @ matrix2
-
-
-    def test_matrix_vector_multiplication(self):
-        matrix = Matrix([1, 2], [3, 4])
-        vector = Mock(Vector)
-        vector._values = [5, 6]
-        vector.__len__ = MagicMock()
-        vector.__len__.return_value = 2
-        output = matrix @ vector
-        self.assertIsInstance(output, Vector)
-        self.assertEqual(output._values, [17, 39])
 
 
 
@@ -276,6 +236,77 @@ class MatrixSizeTests(TestCase):
 
 
 
+class MatrixSquareTests(TestCase):
+
+    @patch("points.matrices.Matrix.width")
+    @patch("points.matrices.Matrix.height")
+    def test_square_matrices(self, mock_height, mock_width):
+        mock_height.return_value = 4
+        mock_width.return_value = 4
+        matrix = Matrix([1, 2], [3, 4], [5, 6])
+        self.assertTrue(matrix.is_square())
+        mock_width.return_value = 3
+        self.assertFalse(matrix.is_square())
+
+
+
+
+class MatrixMatMultiplicationTests(TestCase):
+
+    def setUp(self):
+        self.matrix2 = Mock(Matrix)
+        self.matrix2._rows = [[10, 20, 30], [40, 50, 60]]
+        self.patch1 = patch("points.matrices.Matrix.size")
+        self.mock_size = self.patch1.start()
+        self.mock_size.return_value = (3, 2)
+        self.matrix2.size.return_value = (2, 3)
+        self.matrix2.columns.return_value = ((10, 40), (20, 50), (30, 60))
+
+
+    def tearDown(self):
+        self.patch1.stop()
+
+    def test_can_only_matmul_matrices(self):
+        matrix = Matrix([1, 2], [3, 4], [5, 6])
+        with self.assertRaises(TypeError):
+            matrix @ 100
+
+
+    def test_matrix_dimensions_must_match(self):
+        matrix = Matrix([1, 2], [3, 4], [5, 6])
+        self.matrix2.size.return_value = (3, 3)
+        with self.assertRaises(ValueError):
+            matrix3 = matrix @ self.matrix2
+
+
+    def test_can_mat_mul_matrices(self):
+        matrix = Matrix([1, 2], [3, 4], [5, 6])
+        matrix3 = matrix @ self.matrix2
+        self.assertEqual(
+         matrix3._rows, [[90, 120, 150], [190, 260, 330], [290, 400, 510]]
+        )
+
+
+    def test_can_mat_mul_vectors(self):
+        matrix = Matrix([1, 2], [3, 4])
+        vector = Mock(Vector)
+        vector.values.return_value = [5, 6]
+        vector.__len__, vector.__len__.return_value = MagicMock(), 2
+        output = matrix @ vector
+        self.assertIsInstance(output, Vector)
+        self.assertEqual(output._values, [17, 39])
+
+
+    def test_vector_must_be_right_size_for_matmul(self):
+        matrix = Matrix([1, 2], [3, 4])
+        vector = Mock(Vector)
+        vector.values.return_value = [5, 6]
+        vector.__len__, vector.__len__.return_value = MagicMock(), 3
+        with self.assertRaises(ValueError):
+            output = matrix @ vector
+
+
+
 class MatrixRowsTests(TestCase):
 
     def test_can_get_rows(self):
@@ -298,27 +329,6 @@ class MatrixTranspositionTests(TestCase):
         matrix = Matrix([1, 2], [3, 4], [5, 6])
         matrix_t = matrix.transposed()
         self.assertEqual(matrix_t._rows, [[1, 3, 5], [2, 4, 6]])
-
-
-
-class MatrixSquareTests(TestCase):
-
-    @patch("points.matrices.Matrix.width")
-    @patch("points.matrices.Matrix.height")
-    def test_square_matrices(self, mock_height, mock_width):
-        mock_height.return_value = 4
-        mock_width.return_value = 4
-        matrix = Matrix([1, 2], [3, 4], [5, 6])
-        self.assertTrue(matrix.is_square())
-
-
-    @patch("points.matrices.Matrix.width")
-    @patch("points.matrices.Matrix.height")
-    def test_square_matrices(self, mock_height, mock_width):
-        mock_height.return_value = 4
-        mock_width.return_value = 3
-        matrix = Matrix([1, 2], [3, 4], [5, 6])
-        self.assertFalse(matrix.is_square())
 
 
 
@@ -506,7 +516,7 @@ class MatrixAdjointTests(TestCase):
 
 
 
-class MatrixAdjointTests(TestCase):
+class MatrixInversionTests(TestCase):
 
     @patch("points.matrices.Matrix.adjoint")
     @patch("points.matrices.Matrix.determinant")
@@ -527,3 +537,67 @@ class MatrixAdjointTests(TestCase):
         with self.assertRaises(ValueError):
             matrix.inverse()
 
+
+
+class MatrixGaussianEliminationTests(TestCase):
+
+    def test_can_gaussian_eliminate_square_matrices(self):
+        m = Matrix([3, 5, 9], [2, 3, 5])
+        m.gauss()
+        self.assertEqual(m._rows, [[3, 5, 9], [0, -1 / 3, -1]])
+        m = Matrix([2, 1, -1, 8], [-3, -1, 2, -11], [-2, 1, 2, -3])
+        m.gauss()
+        self.assertEqual(m._rows, [[-3, -1, 2, -11], [0, 5 / 3, 2 / 3, 13 / 3], [0, 0, 1 / 5, -1 / 5]])
+        m = Matrix([1, -1, -1, 1], [3, 2, 12, 1], [2, -1, 1, 1])
+        m.gauss()
+        self.assertEqual(m._rows, [[3, 2, 12, 1], [0, -7 / 3, -7, 1 / 3], [0, 0, 0, 3 / 7]])
+
+
+    def test_can_gaussian_eliminate_vertical_matrices(self):
+        m = Matrix([3, 5, 9], [2, 3, 5], [4, 6, 8], [3, 6, 7], [1, 2, 3])
+        m.gauss()
+        self.assertEqual(m._rows, [[4, 6, 8], [0, 3 / 2, 1], [0, 0, 8 / 3], [0, 0, 0], [0, 0, 0]])
+
+
+    def test_can_gaussian_eliminate_horizontal_matrices(self):
+        m = Matrix([3, 5, 9, 2, 3, 5], [4, 6, 8, 3, 6, 7])
+        m.gauss()
+        self.assertEqual(m._rows, [[4, 6, 8, 3, 6, 7], [0, 0.5, 3, -0.25, -1.5, -0.25]])
+
+
+
+class MatrixRowEchelonFormCheckTests(TestCase):
+
+    def test_not_in_row_echelon_if_zeroes_above_non_zeroes(self):
+        self.assertFalse(Matrix([1, 0], [0, 0], [0, 1]).is_row_echelon())
+        self.assertFalse(Matrix([0, 0], [1, 0], [0, 1]).is_row_echelon())
+
+
+    def test_not_in_row_echelon_if_leading_coefficients_wrong(self):
+        self.assertFalse(Matrix([1, 0], [2, 0]).is_row_echelon())
+        self.assertFalse(Matrix([0, 1], [2, 0]).is_row_echelon())
+
+
+    def test_row_echelon_returns_true(self):
+        self.assertTrue(Matrix([1, 0], [0, 2]).is_row_echelon())
+        self.assertTrue(Matrix([1, 0], [0, 2], [0, 0]).is_row_echelon())
+
+
+
+class MatrixReducedRowEchelonFormCheckTests(TestCase):
+
+    @patch("points.matrices.Matrix.is_row_echelon")
+    def test_check_row_echelon_first(self, mock_check):
+        mock_check.return_value = False
+        self.assertFalse(Matrix([1, 0], [0, 1], [0, 0]).is_reduced_row_echelon())
+        mock_check.assert_called_with()
+
+
+    @patch("points.matrices.Matrix.is_row_echelon")
+    def test_reduced_row_echelon_checks(self, mock_check):
+        mock_check.return_value = True
+        self.assertTrue(Matrix([1, 0], [0, 1], [0, 0]).is_reduced_row_echelon())
+        mock_check.assert_called_with()
+        self.assertFalse(Matrix([1, 0], [0, 2], [0, 0]).is_reduced_row_echelon())
+        self.assertFalse(Matrix([1, 0, 0], [0, 1, 1], [0, 0, 0]).is_reduced_row_echelon())
+        self.assertTrue(Matrix([1, 0, 0], [0, 0, 1], [0, 0, 0]).is_reduced_row_echelon())
