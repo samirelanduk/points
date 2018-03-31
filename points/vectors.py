@@ -223,6 +223,17 @@ class Vector:
         )
 
 
+    def distance_to(self, other):
+        """Returns the distance between this and another vector, when
+        originating at the origin.
+
+        :param Vector other: the other Vector.
+        :rtype: ``float``"""
+
+        vector = self - other
+        return vector.magnitude()
+
+
 
 class VectorSpan:
     """A VectorSpan represents all the vectors that can be obtained by
@@ -355,15 +366,7 @@ class Vector:
 
 
 
-    def distance_to(self, other):
-        """Returns the distance between this and another vector, when
-        originating at the origin.
 
-        :param Vector other: the other Vector.
-        :rtype: ``float``"""
-
-        vector = self - other
-        return vector.magnitude()
 
 
 

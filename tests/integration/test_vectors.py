@@ -80,6 +80,10 @@ class VectorTests(TestCase):
         v = v1.cross(v2)
         self.assertEqual(v.values(), (275, 193, -342))
 
+        # Vector geometry
+        v1, v2 = points.Vector(2, 5, -1), points.Vector(1, -3, -4)
+        self.assertTrue(v1.distance_to(v2), 74)
+
         # Vector span - one dimension
         v1, v2 = points.Vector(4), points.Vector(-3)
         self.assertFalse(v1.linearly_independent_of(v2))
