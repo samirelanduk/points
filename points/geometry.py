@@ -1,7 +1,8 @@
 """Contains functions for using trigonometry equations."""
 
-import math
+from math import cos, sin
 from .vectors import Vector
+from .matrices import Matrix
 
 def translate_vectors(translation, *vectors):
     """Translates some vectors in space. The vectors will be changed in place.
@@ -19,6 +20,17 @@ def translate_vectors(translation, *vectors):
             raise ValueError("Cannot translate {} - wrong dimension".format(v))
     for vector in vectors:
         vector._values = [val + d for val, d in zip(vector._values, translation)]
+
+
+def rotate_2d_vectors(angle, *vectors):
+    for v in vectors:
+        if not isinstance(v, Vector):
+            raise TypeError("Cannot rotate {} - not a vector".format(v))
+        if len(v._values) != 2:
+            raise ValueError("Cannot rotate {} - not 2D".format(v))
+    matrix = Matrix([cos(angle), -sin(angle)], [sin(angle), cos(angle)])
+    for vector in vectors:
+        vector._values = (matrix @ vector)._values
 
 
 

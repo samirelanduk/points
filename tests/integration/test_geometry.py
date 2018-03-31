@@ -1,3 +1,4 @@
+import math
 from unittest import TestCase
 import points
 
@@ -14,8 +15,6 @@ class GeometryTests(TestCase):
         self.assertEqual(v2.values(), (31, 0.6))
         self.assertEqual(v3.values(), (-100, 0))
 
-
-
         # Translation - 3D
         v4 = points.Vector(1, -9, 5)
         v5 = points.Vector(14, 1.1, -9.01)
@@ -26,3 +25,12 @@ class GeometryTests(TestCase):
         self.assertEqual(v5.values(), (14.3, 1.5, -1009.01))
         self.assertEqual(v6.values(), (108.3, 12.4, -999.25))
         self.assertEqual(v7.values(), (-8.7, 1.4, -999.8))
+
+        # Rotation 2D
+        points.rotate_2d_vectors(math.pi / 4, v1, v2, v3)
+        self.assertAlmostEqual(v1.values()[0], 13.011, delta=0.005)
+        self.assertAlmostEqual(v1.values()[1], 11.031, delta=0.005)
+        self.assertAlmostEqual(v2.values()[0], 21.496, delta=0.005)
+        self.assertAlmostEqual(v2.values()[1], 22.345, delta=0.005)
+        self.assertAlmostEqual(v3.values()[0], -70.711, delta=0.005)
+        self.assertAlmostEqual(v3.values()[1], -70.711, delta=0.005)
