@@ -83,12 +83,15 @@ class Rotation2dTests(GeometryTest):
     def setUp(self):
         GeometryTest.setUp(self)
         self.patch1 = patch("points.geometry.Matrix")
+        self.patch2 = patch("points.geometry.translate_vectors")
         self.mock_matrix = self.patch1.start()
+        self.mock_trans = self.patch2.start()
         self.v1._values.pop(), self.v2._values.pop()
 
 
     def tearDown(self):
         self.patch1.stop()
+        self.patch2.stop()
 
 
     def test_can_rotate_2d(self):
@@ -104,6 +107,24 @@ class Rotation2dTests(GeometryTest):
         matrix.__matmul__.assert_any_call(self.v2)
         self.assertEqual(self.v1._values, [4, 5])
         self.assertEqual(self.v2._values, [7, 8, 9])
+        self.assertFalse(self.mock_trans.called)
+
+
+    def test_can_rotate_2d_about_point(self):
+        matrix = Mock()
+        self.mock_matrix.return_value = matrix
+        matrix.__matmul__ = MagicMock()
+        matrix.__matmul__.side_effect = [self.v2, self.v3, self.v1]
+        rotate_2d_vectors(0.5, self.v1, self.v2, point=[1, 2])
+        self.mock_trans.assert_any_call((-1, -2), self.v1, self.v2)
+        self.mock_matrix.assert_called_with(
+         [cos(0.5), -sin(0.5)], [sin(0.5), cos(0.5)]
+        )
+        matrix.__matmul__.assert_any_call(self.v1)
+        matrix.__matmul__.assert_any_call(self.v2)
+        self.assertEqual(self.v1._values, [4, 5])
+        self.assertEqual(self.v2._values, [7, 8, 9])
+        self.mock_trans.assert_any_call((1, 2), self.v1, self.v2)
 
 
     def test_rotation_needs_vectors(self):
@@ -114,6 +135,11 @@ class Rotation2dTests(GeometryTest):
     def test_translation_needs_2d_vectors(self):
         with self.assertRaises(ValueError):
             rotate_2d_vectors(0.5, self.v1, self.v2, self.v3)
+
+
+    def test_point_must_be_correct_dimension(self):
+        with self.assertRaises(ValueError):
+            rotate_2d_vectors(0.5, self.v1, self.v2, point=[1, 2, 3])
 
 
 

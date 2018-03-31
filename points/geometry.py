@@ -50,10 +50,11 @@ def translate_vectors(translation, *vectors):
 
 @round_vectors
 @allow_degrees
-def rotate_2d_vectors(angle, *vectors):
+def rotate_2d_vectors(angle, *vectors, point=None):
     """Rotates 2 dimensional vectors.
 
     :param float angle: The angle in radians.
+    :param iter point: A point to rotate around. The origin is the default.
     :param int trim: if given, the vector values will be rounded to this number\
     of decimal places at the end.
     :param bool degrees: if `True``, the angle given will be interpreted as\
@@ -61,16 +62,22 @@ def rotate_2d_vectors(angle, *vectors):
     :param \*vectors: The vectors to rotate.
     :raises TypeError: if non-vectors are given.
     :raises ValueError: if the vectors given don't match the dimension of the\
-    translation."""
+    rotation."""
 
     for v in vectors:
         if not isinstance(v, Vector):
             raise TypeError("Cannot rotate {} - not a vector".format(v))
         if len(v._values) != 2:
             raise ValueError("Cannot rotate {} - not 2D".format(v))
+    if point:
+        if len(point) != 2:
+            raise ValueError("point {} is not 2D".format(point))
+        dx, dy = point
+        translate_vectors((-dx, -dy), *vectors)
     matrix = Matrix([cos(angle), -sin(angle)], [sin(angle), cos(angle)])
     for vector in vectors:
         vector._values = (matrix @ vector)._values
+    if point: translate_vectors((dx, dy), *vectors)
 
 
 @round_vectors
@@ -87,7 +94,7 @@ def rotate_3d_vectors(angle, dimension, *vectors):
     :param \*vectors: The vectors to rotate.
     :raises TypeError: if non-vectors are given.
     :raises ValueError: if the vectors given don't match the dimension of the\
-    translation."""
+    rotation."""
 
     for v in vectors:
         if not isinstance(v, Vector):
