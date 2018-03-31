@@ -16,7 +16,13 @@ class GeometryTests(TestCase):
 
 
 
-
-        v1 = points.Vector(1, -9, 5)
-        v2 = points.Vector(14, 1.1, -9.01)
-        v3 = points.Vector(108, 12, 0.75)
+        # Translation - 3D
+        v4 = points.Vector(1, -9, 5)
+        v5 = points.Vector(14, 1.1, -9.01)
+        v6 = points.Vector(108, 12, 0.75)
+        v7 = points.Vector(-9, 1, 0.2)
+        points.translate_vectors((0.3, 0.4, -1000), v4, v5, v6, v7)
+        self.assertEqual(v4.values(), (1.3, -8.6, -995))
+        self.assertEqual(v5.values(), (14.3, 1.5, -1009.01))
+        self.assertEqual(v6.values(), (108.3, 12.4, -999.25))
+        self.assertEqual(v7.values(), (-8.7, 1.4, -999.8))
