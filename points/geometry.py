@@ -4,14 +4,29 @@ from math import cos, sin
 from .vectors import Vector
 from .matrices import Matrix
 
+def round_vectors(func):
+    """This decorator takes a function which handles vectors, and makes it round
+    its values once complete."""
+
+    def new(*args, trim=None, **kwargs):
+        result = func(*args, **kwargs)
+        if trim:
+            for arg in args:
+                if isinstance(arg, Vector):
+                    arg._values = [round(val, trim) for val in arg._values]
+        return result
+    new.__doc__, new.__name__ = func.__doc__, func.__name__
+    return new
+
+
 def translate_vectors(translation, *vectors):
     """Translates some vectors in space. The vectors will be changed in place.
 
+    :param tuple translation: The translation values.
+    :param \*vectors: The vectors to translate.
     :raises TypeError: if non-vectors are given.
     :raises ValueError: if the vectors given don't match the dimension of the\
-    translation.
-    :param tuple translation: The translation values.
-    :param \*vectors: The vectors to translate."""
+    translation."""
 
     for v in vectors:
         if not isinstance(v, Vector):
@@ -22,7 +37,18 @@ def translate_vectors(translation, *vectors):
         vector._values = [val + d for val, d in zip(vector._values, translation)]
 
 
+@round_vectors
 def rotate_2d_vectors(angle, *vectors):
+    """Rotates 2 dimensional vectors.
+
+    :param float angle: The angle in radians.
+    :param int trim: if given, the vector values will be rounded to this number\
+    of decimal places at the end.
+    :param \*vectors: The vectors to rotate.
+    :raises TypeError: if non-vectors are given.
+    :raises ValueError: if the vectors given don't match the dimension of the\
+    translation."""
+
     for v in vectors:
         if not isinstance(v, Vector):
             raise TypeError("Cannot rotate {} - not a vector".format(v))

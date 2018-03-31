@@ -11,6 +11,32 @@ class GeometryTest(TestCase):
 
 
 
+class VectorRoundingDecoratorTests(GeometryTest):
+
+    def setUp(self):
+        GeometryTest.setUp(self)
+        self.func = lambda a, b, c: None
+
+
+    def test_can_ignore_vector_values(self):
+        self.v1._values = [0.123, 0.456]
+        self.v2._values = [0.456, 0.789]
+        func = round_vectors(self.func)
+        func("a", self.v1, self.v2)
+        self.assertEqual(self.v1._values, [0.123, 0.456])
+        self.assertEqual(self.v2._values, [0.456, 0.789])
+
+
+    def test_can_round_vector_values(self):
+        self.v1._values = [0.123, 0.456]
+        self.v2._values = [0.456, 0.789]
+        func = round_vectors(self.func)
+        func("a", self.v1, self.v2, trim=2)
+        self.assertEqual(self.v1._values, [0.12, 0.46])
+        self.assertEqual(self.v2._values, [0.46, 0.79])
+
+
+
 class TranslationTests(GeometryTest):
 
     def test_can_translate(self):
