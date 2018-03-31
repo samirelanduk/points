@@ -73,6 +73,45 @@ def rotate_2d_vectors(angle, *vectors):
         vector._values = (matrix @ vector)._values
 
 
+@round_vectors
+@allow_degrees
+def rotate_3d_vectors(angle, dimension, *vectors):
+    """Rotates 3 dimensional vectors.
+
+    :param float angle: The angle in radians.
+    :param int dimension: 0, 1, or 2, depending on which axis to rotate around.
+    :param int trim: if given, the vector values will be rounded to this number\
+    of decimal places at the end.
+    :param bool degrees: if `True``, the angle given will be interpreted as\
+    being in degrees, not radians.
+    :param \*vectors: The vectors to rotate.
+    :raises TypeError: if non-vectors are given.
+    :raises ValueError: if the vectors given don't match the dimension of the\
+    translation."""
+
+    for v in vectors:
+        if not isinstance(v, Vector):
+            raise TypeError("Cannot rotate {} - not a vector".format(v))
+        if len(v._values) != 3:
+            raise ValueError("Cannot rotate {} - not 3D".format(v))
+    if dimension == 0:
+        matrix = Matrix(
+         [1, 0, 0], [0, cos(angle), -sin(angle)], [0, sin(angle), cos(angle)]
+        )
+    elif dimension == 1:
+        matrix = Matrix(
+         [cos(angle), 0, sin(angle)], [0, 1, 0], [-sin(angle), 0, cos(angle)]
+        )
+    elif dimension == 2:
+        matrix = Matrix(
+         [cos(angle), -sin(angle), 0], [sin(angle), cos(angle), 0], [0, 0, 1]
+        )
+    else:
+        raise ValueError("{} is not a valid dimensions".format(dimension))
+    for vector in vectors:
+        vector._values = (matrix @ vector)._values
+
+
 
 '''def degree_angle(func):
     """A decorator which takes a function that returns an angle in radians and

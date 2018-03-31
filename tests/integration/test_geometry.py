@@ -41,3 +41,22 @@ class GeometryTests(TestCase):
         self.assertEqual(v1.values(), (13.0, 11.0))
         self.assertEqual(v2.values(), (21.5, 22.3))
         self.assertEqual(v3.values(), (-70.7, -70.7))
+
+        # Rotate 3D
+        points.rotate_3d_vectors(45, 0, v4, v5, v6, v7, degrees=True, trim=2)
+        self.assertEqual(v4.values(), (1.3, 697.49, -709.65))
+        self.assertEqual(v5.values(), (14.3, 714.54, -712.42))
+        self.assertEqual(v6.values(), (108.3, 715.34, -697.81))
+        self.assertEqual(v7.values(), (-8.7, 707.96, -705.98))
+
+        points.rotate_3d_vectors(-10, 1, v4, v5, v6, v7, degrees=True, trim=2)
+        self.assertEqual(v4.values(), (124.51, 697.49, -698.64))
+        self.assertEqual(v5.values(), (137.79, 714.54, -699.11))
+        self.assertEqual(v6.values(), (227.83, 715.34, -668.40))
+        self.assertEqual(v7.values(), (114.02, 707.96, -696.77))
+
+        points.rotate_3d_vectors(181, 2, v4, v5, v6, v7, degrees=True, trim=2)
+        self.assertEqual(v4.values(), (-112.32, -699.56, -698.64))
+        self.assertEqual(v5.values(), (-125.30, -716.84, -699.11))
+        self.assertEqual(v6.values(), (-215.31, -719.21, -668.40))
+        self.assertEqual(v7.values(), (-101.65, -709.84, -696.77))

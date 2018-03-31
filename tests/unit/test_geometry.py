@@ -117,6 +117,50 @@ class Rotation2dTests(GeometryTest):
 
 
 
+class Rotation3dTests(GeometryTest):
+
+    def setUp(self):
+        GeometryTest.setUp(self)
+        self.patch1 = patch("points.geometry.Matrix")
+        self.mock_matrix = self.patch1.start()
+        self.v3._values.pop()
+
+
+    def tearDown(self):
+        self.patch1.stop()
+
+
+    def test_can_rotate_3d(self):
+        matrix = Mock()
+        self.mock_matrix.return_value = matrix
+        matrix.__matmul__ = MagicMock()
+        matrix.__matmul__.side_effect = [self.v2, self.v3, self.v1]
+        rotate_3d_vectors(0.5, 0, self.v1, self.v2)
+        self.mock_matrix.assert_called_with(
+         [1, 0, 0], [0, cos(0.5), -sin(0.5)], [0, sin(0.5), cos(0.5)]
+        )
+        matrix.__matmul__.assert_any_call(self.v1)
+        matrix.__matmul__.assert_any_call(self.v2)
+        self.assertEqual(self.v1._values, [4, 5, 6])
+        self.assertEqual(self.v2._values, [7, 8])
+
+
+    def test_rotation_needs_vectors(self):
+        with self.assertRaises(TypeError):
+            rotate_3d_vectors(0.5, 0, self.v1, self.v2, "vector")
+
+
+    def test_translation_needs_3d_vectors(self):
+        with self.assertRaises(ValueError):
+            rotate_3d_vectors(0.5, 0, self.v1, self.v2, self.v3)
+
+
+    def test_dimension_must_be_valid(self):
+        with self.assertRaises(ValueError):
+            rotate_3d_vectors(0.5, 3, self.v1, self.v2)
+
+
+
 '''
 from math import pi
 from points.geometry import degree_angle
