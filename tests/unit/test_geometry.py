@@ -1,3 +1,4 @@
+import math
 from unittest import TestCase
 from unittest.mock import Mock, patch, MagicMock
 from points.geometry import *
@@ -34,6 +35,24 @@ class VectorRoundingDecoratorTests(GeometryTest):
         func("a", self.v1, self.v2, trim=2)
         self.assertEqual(self.v1._values, [0.12, 0.46])
         self.assertEqual(self.v2._values, [0.46, 0.79])
+
+
+
+class VectorRoundingDecoratorTests(GeometryTest):
+
+    def setUp(self):
+        GeometryTest.setUp(self)
+        self.func = lambda a, b, c: a
+
+
+    def test_can_just_use_radians(self):
+        func = allow_degrees(self.func)
+        self.assertEqual(func(math.pi, 2, 3), math.pi)
+
+
+    def test_can_convert_to_degrees(self):
+        func = allow_degrees(self.func)
+        self.assertEqual(func(180, 2, 3, degrees=True), math.pi)
 
 
 

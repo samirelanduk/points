@@ -1,6 +1,6 @@
 """Contains functions for using trigonometry equations."""
 
-from math import cos, sin
+from math import cos, sin, radians
 from .vectors import Vector
 from .matrices import Matrix
 
@@ -15,6 +15,17 @@ def round_vectors(func):
                 if isinstance(arg, Vector):
                     arg._values = [round(val, trim) for val in arg._values]
         return result
+    new.__doc__, new.__name__ = func.__doc__, func.__name__
+    return new
+
+
+def allow_degrees(func):
+    """This decorator takes a function which takes an angle, and makes it able
+    to take it in degrees as well as in radians."""
+
+    def new(*args, degrees=False, **kwargs):
+        if degrees: args = [radians(args[0])] + list(args[1:])
+        return func(*args, **kwargs)
     new.__doc__, new.__name__ = func.__doc__, func.__name__
     return new
 
@@ -38,12 +49,15 @@ def translate_vectors(translation, *vectors):
 
 
 @round_vectors
+@allow_degrees
 def rotate_2d_vectors(angle, *vectors):
     """Rotates 2 dimensional vectors.
 
     :param float angle: The angle in radians.
     :param int trim: if given, the vector values will be rounded to this number\
     of decimal places at the end.
+    :param bool degrees: if `True``, the angle given will be interpreted as\
+    being in degrees, not radians.
     :param \*vectors: The vectors to rotate.
     :raises TypeError: if non-vectors are given.
     :raises ValueError: if the vectors given don't match the dimension of the\

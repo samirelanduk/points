@@ -37,7 +37,7 @@ class GeometryTests(TestCase):
         v2 = points.Vector(19, 1)
         v3 = points.Vector(-112, 0.4)
         points.translate_vectors((12, -0.4), v1, v2, v3)
-        points.rotate_2d_vectors(math.pi / 4, v1, v2, v3, trim=1)
+        points.rotate_2d_vectors(45, v1, v2, v3, trim=1, degrees=True)
         self.assertEqual(v1.values(), (13.0, 11.0))
         self.assertEqual(v2.values(), (21.5, 22.3))
         self.assertEqual(v3.values(), (-70.7, -70.7))
