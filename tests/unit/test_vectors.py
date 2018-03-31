@@ -382,7 +382,7 @@ class VectorCrossProductTests(TestCase):
 
 
 class VectorDistanceTests(TestCase):
-    
+
     @patch("points.vectors.Vector.__sub__")
     def test_can_get_distance_between_vectors(self, mock_sub):
         vector1 = Vector(3, 4)
@@ -393,6 +393,35 @@ class VectorDistanceTests(TestCase):
         distance = vector1.distance_to(vector2)
         mock_sub.assert_called_with(vector2)
         self.assertEqual(distance, 100)
+
+
+
+class VectorAngleWithTests(TestCase):
+
+    @patch("points.vectors.Vector.magnitude")
+    @patch("points.vectors.Vector.dot")
+    def test_can_get_angle_between_vectors(self, mock_dot, mock_mag):
+        mock_dot.return_value = 1
+        mock_mag.return_value = 4
+        vector1 = Vector(7, 1)
+        vector2 = Mock(Vector)
+        vector2.magnitude.return_value = 0.5
+        vector2.length.return_value = 2
+        self.assertAlmostEqual(vector1.angle_with(vector2), 1.0471, delta=0.0005)
+
+
+    def test_angle_requires_vector(self):
+        vector1 = Vector(-6, -8)
+        with self.assertRaises(TypeError):
+            vector1.angle_with("vector")
+
+
+    def test_angle_requires_equal_length(self):
+        vector1 = Vector(-6, 8)
+        vector2 = Mock(Vector)
+        vector2.length.return_value = 3
+        with self.assertRaises(ValueError):
+            vector1.angle_with(vector2)
 
 
 
@@ -516,30 +545,5 @@ class VectorRotation(TestCase):
 
 
 
-class VectorAngleWithTests(TestCase):
 
-    @patch("points.vectors.Vector.magnitude")
-    @patch("points.vectors.Vector.dot")
-    def test_can_get_angle_between_vectors(self, mock_dot, mock_mag):
-        mock_dot.return_value = 1
-        mock_mag.return_value = 4
-        vector1 = Vector(7, 1)
-        vector2 = Mock(Vector)
-        vector2.magnitude.return_value = 0.5
-        vector2.length.return_value = 2
-        self.assertAlmostEqual(vector1.angle_with(vector2), 1.0471, delta=0.0005)
-
-
-    def test_dot_product_requires_vector(self):
-        vector1 = Vector(-6, -8)
-        with self.assertRaises(TypeError):
-            vector1.angle_with("vector")
-
-
-    def test_dot_product_requires_equal_length(self):
-        vector1 = Vector(-6, 8)
-        vector2 = Mock(Vector)
-        vector2.length.return_value = 3
-        with self.assertRaises(ValueError):
-            vector1.angle_with(vector2)
 '''

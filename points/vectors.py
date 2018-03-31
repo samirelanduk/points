@@ -1,6 +1,6 @@
 """Contains the Vector class."""
 
-from math import sqrt
+from math import sqrt, acos
 
 class Vector:
 
@@ -234,6 +234,20 @@ class Vector:
         return vector.magnitude()
 
 
+    def angle_with(self, other):
+        """Returns the angle between this vector and another, in radians.
+
+        :param Vector other: The other Vector.
+        :raises TypeError: If a non-Vector is given.
+        :rtype: ``float``"""
+
+        if not isinstance(other, Vector):
+            raise TypeError("{} is not a Vector".format(other))
+        if self.length() != other.length():
+            raise ValueError("{} and {} not equal length".format(self, other))
+        return acos(self.dot(other) / (self.magnitude() * other.magnitude()))
+
+
 
 class VectorSpan:
     """A VectorSpan represents all the vectors that can be obtained by
@@ -376,17 +390,5 @@ class Vector:
 
 
     @degree_angle
-    def angle_with(self, other):
-        """Returns the angle between this vector and another, in radians.
 
-        :param Vector other: The other Vector.
-        :param bool degrees: If ``True`` the angle will be returned in degrees.
-        :raises TypeError: If a non-Vector is given.
-        :rtype: ``float``"""
-
-        if not isinstance(other, Vector):
-            raise TypeError("{} is not a Vector".format(other))
-        if self.length() != other.length():
-            raise ValueError("{} and {} not equal length".format(self, other))
-        return acos(self.dot(other) / (self.magnitude() * other.magnitude()))
 '''
