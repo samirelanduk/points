@@ -123,3 +123,25 @@ def rotate_3d_vectors(angle, dimension, *vectors, point=None):
     for vector in vectors:
         vector._values = (matrix @ vector)._values
     if point: translate_vectors((dx, dy, dz), *vectors)
+
+
+@round_vectors
+def align_vectors_to_plane(axis, coaxis, vector, *vectors):
+    """Rotates some vectors around an axis, until a given vector lies in the
+    plane of that axis with a second coaxis.
+
+    :param int axis: The axis to rotate around.
+    :param int coaxis: The second axis of the plane to land on.
+    :param Vector vector: The vector to align to the plane.
+    :param \*vectors: The other vectors along for the ride."""
+    
+    if axis not in (0, 1, 2):
+        raise ValueError("{} is not a valid axis".format(axis))
+    if coaxis not in (0, 1, 2) or coaxis == axis:
+        raise ValueError("{} is not a valid coaxis".format(coaxis))
+    coaxis_vector = Vector(*[1 if i == coaxis else 0 for i in range(3)])
+    flattened_vector = Vector(
+     *[0 if i == axis else val for i, val in enumerate(vector._values)]
+    )
+    angle = coaxis_vector.angle_with(flattened_vector)
+    rotate_3d_vectors(angle, axis, vector, *vectors)

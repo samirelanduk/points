@@ -242,3 +242,28 @@ class Rotation3dTests(GeometryTest):
     def test_point_must_be_correct_dimension(self):
         with self.assertRaises(ValueError):
             rotate_3d_vectors(0.5, 1, self.v1, self.v2, point=[1, 2])
+
+
+
+class VectorAlignmentTests(GeometryTest):
+
+    @patch("points.geometry.Vector")
+    @patch("points.geometry.rotate_3d_vectors")
+    def test_can_align_vectors(self, mock_rotate, mock_vector):
+        vector1, vector2 = Mock(Vector), Mock(Vector)
+        mock_vector.side_effect = vector1, vector2
+        vector1.angle_with.return_value = 25
+        align_vectors_to_plane(1, 2, self.v1, self.v2, self.v3)
+        mock_vector.assert_any_call(0, 0, 1)
+        mock_vector.assert_any_call(1, 0, 3)
+        vector1.angle_with.assert_called_with(vector2)
+        mock_rotate.assert_called_with(25, 1, self.v1, self.v2, self.v3)
+
+
+    def test_alignment_axes_must_be_valid(self):
+        with self.assertRaises(ValueError):
+            align_vectors_to_plane(3, 2, self.v1, self.v2, self.v3)
+        with self.assertRaises(ValueError):
+            align_vectors_to_plane(2, 3, self.v1, self.v2, self.v3)
+        with self.assertRaises(ValueError):
+            align_vectors_to_plane(2, 2, self.v1, self.v2, self.v3)

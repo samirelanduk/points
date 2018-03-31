@@ -80,3 +80,24 @@ class GeometryTests(TestCase):
         )
         self.assertEqual(v5.values(), (2, 0, 2))
         self.assertEqual(v6.values(), (-1, 3, -1))
+
+        # Aligning to planes
+        v5 = points.Vector(0, 0, 1)
+        v6 = points.Vector(0, 1, 1)
+        v7 = points.Vector(0, -1, 1)
+        v8 = points.Vector(1, 0, 1)
+        v9 = points.Vector(-1, 0, 1)
+        # Rotate around x-axis to xy plane
+        points.align_vectors_to_plane(0, 1, v5, v6, v7, v8, v9, trim=2)
+        self.assertEqual(v5.values(), (0, -1, 0))
+        self.assertEqual(v6.values(), (0, -1, 1))
+        self.assertEqual(v7.values(), (0, -1, -1))
+        self.assertEqual(v8.values(), (1, -1, 0))
+        self.assertEqual(v9.values(), (-1, -1, 0))
+        # Rotate around z-axis to xz plane
+        points.align_vectors_to_plane(2, 0, v5, v6, v7, v8, v9, trim=2)
+        self.assertEqual(v5.values(), (1, 0, 0))
+        self.assertEqual(v6.values(), (1, 0, 1))
+        self.assertEqual(v7.values(), (1, 0, -1))
+        self.assertEqual(v8.values(), (1, 1, 0))
+        self.assertEqual(v9.values(), (1, -1, 0))
