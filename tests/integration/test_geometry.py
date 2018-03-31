@@ -71,3 +71,12 @@ class GeometryTests(TestCase):
         self.assertEqual(v2.values(), (-125.30, -716.84, -699.11))
         self.assertEqual(v3.values(), (-215.31, -719.21, -668.40))
         self.assertEqual(v4.values(), (-101.65, -709.84, -696.77))
+
+        # Rotation around arbitrary point
+        v5 = points.Vector(2, 2, 2)
+        v6 = points.Vector(-1, -1, -1)
+        points.rotate_3d_vectors(
+         90, 0, v5, v6, degrees=True, trim=6, point=[1, 1, 1]
+        )
+        self.assertEqual(v5.values(), (2, 0, 2))
+        self.assertEqual(v6.values(), (-1, 3, -1))

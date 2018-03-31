@@ -82,7 +82,7 @@ def rotate_2d_vectors(angle, *vectors, point=None):
 
 @round_vectors
 @allow_degrees
-def rotate_3d_vectors(angle, dimension, *vectors):
+def rotate_3d_vectors(angle, dimension, *vectors, point=None):
     """Rotates 3 dimensional vectors.
 
     :param float angle: The angle in radians.
@@ -101,6 +101,11 @@ def rotate_3d_vectors(angle, dimension, *vectors):
             raise TypeError("Cannot rotate {} - not a vector".format(v))
         if len(v._values) != 3:
             raise ValueError("Cannot rotate {} - not 3D".format(v))
+    if point:
+        if len(point) != 3:
+            raise ValueError("point {} is not 3D".format(point))
+        dx, dy, dz = point
+        translate_vectors((-dx, -dy, -dz), *vectors)
     if dimension == 0:
         matrix = Matrix(
          [1, 0, 0], [0, cos(angle), -sin(angle)], [0, sin(angle), cos(angle)]
@@ -117,18 +122,4 @@ def rotate_3d_vectors(angle, dimension, *vectors):
         raise ValueError("{} is not a valid dimensions".format(dimension))
     for vector in vectors:
         vector._values = (matrix @ vector)._values
-
-
-
-'''def degree_angle(func):
-    """A decorator which takes a function that returns an angle in radians and
-    confers upon it the ability to return it in degrees."""
-
-    def new_func(*args, degrees=False, **kwargs):
-        angle = func(*args, **kwargs)
-        if degrees:
-            return math.degrees(angle)
-        return angle
-    new_func.__name__ = func.__name__
-    new_func.__doc__ = func.__doc__
-    return new_func'''
+    if point: translate_vectors((dx, dy, dz), *vectors)
