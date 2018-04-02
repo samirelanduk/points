@@ -73,6 +73,27 @@ with the dot product and angle between them:
   >>> vector.angle_with(vector2, degrees=True)
   50.99392854141668
 
+A Vector's 'span' is the set of all Vectors which can be created by scaling it,
+and the span of a set of Vectors is all the Vectors which can be created from
+linear combinations of those Vectors. A set of vectors are linearly independent
+if none of them are in the span of the others...
+
+  >>> span = vector.span()
+  >>> vector in span
+  True
+  >>> vector2 in span
+  False
+  >>> span = vector.span_with(vector2)
+  >>> vector in span
+  True
+  >>> vector2 in span
+  True
+  >>> points.Vector(1, 2, 3) in span
+  True
+  >>> vector.linearly_independent_of(vector2)
+  True
+
+
 Matrices
 ########
 
@@ -96,6 +117,10 @@ You can also pass it vector, which will be interpreted as **columns**:
   >>> matrix2.columns()
   ((1, 4, 7), (2, 5, 8), (3, 6, 9))
 
-You can add matrices togeher with ``+`` or multiply them by scalars with ``*``.
+You can add matrices together with ``+`` or multiply them by scalars with ``*``.
 The ``@`` operator is used to multiply a Matrix with another Matrix, or with a
 Vector.
+
+Matrices currently support the concepts of inversion, adjoin, cofactors, minors,
+determinants, transposition, Gaussian elimination, and checks for row echelon
+form and reduced row echelon form. See the full documentation for more details.
