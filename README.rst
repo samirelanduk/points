@@ -9,7 +9,16 @@
 .. |pypi| image:: https://img.shields.io/pypi/pyversions/points.svg
 
 
-|travis|_ |coveralls|_ |pypi|
+|travis| |coveralls| |pypi|
+
+.. |travis| image:: https://api.travis-ci.org/samirelanduk/points.svg?branch=0.4
+  :target: https://travis-ci.org/samirelanduk/points/
+
+.. |coveralls| image:: https://coveralls.io/repos/github/samirelanduk/points/badge.svg?branch=0.4
+  :target: https://coveralls.io/github/samirelanduk/points/
+
+.. |pypi| image:: https://img.shields.io/pypi/pyversions/points.svg
+  :target: https://pypi.org/project/points/
 
 points
 ======
