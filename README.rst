@@ -1,14 +1,3 @@
-.. |travis| image:: https://api.travis-ci.org/samirelanduk/points.svg?branch=0.4
-
-.. _travis https://travis-ci.org/samirelanduk/points/
-
-.. |coveralls| image:: https://coveralls.io/repos/github/samirelanduk/points/badge.svg?branch=0.4
-
-.. _coveralls https://coveralls.io/github/samirelanduk/points/
-
-.. |pypi| image:: https://img.shields.io/pypi/pyversions/points.svg
-
-
 |travis| |coveralls| |pypi|
 
 .. |travis| image:: https://api.travis-ci.org/samirelanduk/points.svg?branch=0.4
