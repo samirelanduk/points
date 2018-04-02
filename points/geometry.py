@@ -1,4 +1,4 @@
-"""Contains functions for using trigonometry equations."""
+"""Contains functions for manipulating Euclidian vectors."""
 
 from math import cos, sin, radians
 from .vectors import Vector
@@ -21,7 +21,8 @@ def round_vectors(func):
 
 def allow_degrees(func):
     """This decorator takes a function which takes an angle, and makes it able
-    to take it in degrees as well as in radians."""
+    to take it in degrees as well as in radians. The angle argument should be
+    the first positional argument."""
 
     def new(*args, degrees=False, **kwargs):
         if degrees: args = [radians(args[0])] + list(args[1:])

@@ -215,7 +215,7 @@ class Matrix:
 
 
     def minors(self):
-        """Returns the Matrix of minors for this matrix.
+        """Returns the matrix of minors for this matrix.
 
         :raises ValueError: if a non-square matrix is given.
         :rtype: ``Matrix``"""
@@ -226,7 +226,7 @@ class Matrix:
 
 
     def cofactors(self):
-        """Returns the Matrix of cofactors for this matrix.
+        """Returns the matrix of cofactors for this matrix.
 
         :raises ValueError: if a non-square matrix is given.
         :rtype: ``Matrix``"""
@@ -257,7 +257,7 @@ class Matrix:
 
 
     def adjoint(self):
-        """Returns the adjoin matrix of this matrix.
+        """Returns the adjoint matrix of this matrix.
 
         :raises ValueError: if a non-square matrix is given.
         :rtype: ``Matrix``"""
@@ -301,13 +301,6 @@ class Matrix:
         :rtype: ``bool``"""
 
         return self.rank() == len(self._rows)
-
-
-    '''def null_space(self):
-        if self.is_full_rank():
-            return VectorSpan(Vector(*([0] * len(self._rows))))'''
-
-
 
 
     def gauss(self):

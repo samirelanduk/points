@@ -4,7 +4,7 @@ import math
 from math import sqrt, acos
 
 class Vector:
-    """A vector is a sequence of numbers. They can represent a point in space,
+    """A Vector is a sequence of numbers. They can represent a point in space,
     or the attributes of an object.
 
     Vectors can be added and subtracted with ``+`` and ``-``, but ``*`` is
@@ -12,8 +12,7 @@ class Vector:
     by a number but not by another vector (there are special methods for this).
 
     :param values: The numbers that make up the Vector. If a single sequence is\
-    given, that sequence will be unpacked to make the vector.
-    :raises TypeError: if the values given are not numeric."""
+    given, that sequence will be unpacked to make the vector."""
 
     def __init__(self, *values):
         if len(values) == 1:
@@ -86,7 +85,7 @@ class Vector:
 
 
     def length(self):
-        """Returns the length of the Vector. This is the number of values it
+        """Returns the length of the vector. This is the number of values it
         contains, not its :py:meth:`magnitude`.
 
         :rtype: ``int``"""
@@ -95,7 +94,7 @@ class Vector:
 
 
     def values(self):
-        """Returns the values in the Vector.
+        """Returns the values in the vector.
 
         :rtype: ``tuple``"""
 
@@ -103,7 +102,7 @@ class Vector:
 
 
     def magnitude(self):
-        """Returns the magnitude of the Vector - the length of the line it
+        """Returns the magnitude of the vector - the length of the line it
         represents in space.
 
         :rtype: ``float``"""
@@ -112,7 +111,7 @@ class Vector:
 
 
     def append(self, value):
-        """Adds a value to the end of the Vector.
+        """Adds a value to the end of the vector.
 
         :param value: the value to add."""
 
@@ -120,7 +119,7 @@ class Vector:
 
 
     def insert(self, index, value):
-        """Insertes a value into the Vector.
+        """Insertes a value into the vector.
 
         :param int index: The location to insert to.
         :param value: the value to add."""
@@ -129,7 +128,7 @@ class Vector:
 
 
     def remove(self, value):
-        """Removes a value from the Vector.
+        """Removes a value from the vector.
 
         :param value: the value to remove."""
 
@@ -137,7 +136,7 @@ class Vector:
 
 
     def pop(self, index=-1):
-        """Removes a value from the Vector and returns it.
+        """Removes a value from the vector and returns it.
 
         :param index: the index to remove, default being ``-1``.
         :returns: the removed value."""
@@ -146,7 +145,7 @@ class Vector:
 
 
     def components(self):
-        """Returns the individual components that sum to make up the Vector.
+        """Returns the individual components that sum to make up the vector.
 
         :returns: ``tuple`` of ``Vector``"""
 
@@ -159,9 +158,9 @@ class Vector:
 
 
     def linearly_dependent_on(self, *vectors):
-        """Checks if this Vector is linearly independent of a set of other
-        vectors - that is, whether it is impossible to construct this Vector
-        from a linear combination of the other Vectors.
+        """Checks if this Vector is linearly dependent on a set of other
+        vectors - that is, whether it is possible to construct this vector
+        from a linear combination of the other vectors.
 
         :param \*vectors: The vectors to check against.
         :rtype: ``bool``"""
@@ -170,8 +169,8 @@ class Vector:
 
 
     def linearly_independent_of(self, *vectors):
-        """Checks if this Vector is linearly dependent on a set of other
-        vectors - that is, whether it is possible to construct this Vector from
+        """Checks if this Vector is linearly independent of a set of other
+        vectors - that is, whether it is impossible to construct this Vector from
         a linear combination of the other Vectors.
 
         :param \*vectors: The vectors to check against.
@@ -181,8 +180,8 @@ class Vector:
 
 
     def span(self):
-        """Returns the Vector's span - the set of all Vectors that can be
-        constructed by scaling this Vector.
+        """Returns the vector's span - the set of all vectors that can be
+        constructed by scaling this vector.
 
         :rtype: ``VectorSpan``"""
 
@@ -190,8 +189,8 @@ class Vector:
 
 
     def span_with(self, *vectors):
-        """Returns the span of this Vector and others - the set of all Vectors
-        that can be constructed by scaling and adding the Vectors.
+        """Returns the span of this vector and others - the set of all vectors
+        that can be constructed by scaling and adding the vectors.
 
         :rtype: ``VectorSpan``"""
 
@@ -215,7 +214,7 @@ class Vector:
 
     def cross(self, other):
         """Returns the cross product between this vector and another. Only
-        three-dimensional Vectors can do this (Vectors of length 3).
+        three-dimensional Vectors can do this (vectors of length 3).
 
         :param Vector other: The other Vector.
         :raises TypeError: if a non-Vector is given.
@@ -249,6 +248,7 @@ class Vector:
         """Returns the angle between this vector and another, in radians.
 
         :param Vector other: The other Vector.
+        :param bool degrees: If ``True``, the angle will be returned in degrees.
         :raises TypeError: If a non-Vector is given.
         :rtype: ``float``"""
 
@@ -262,15 +262,15 @@ class Vector:
 
 class VectorSpan:
     """A VectorSpan represents all the vectors that can be obtained by
-    performing linear combinations of some starter set of Vectors.
+    performing linear combinations of some starter set of vectors.
 
     A Vector is ``in`` this span if it can be constructed from a linear
     combination of the defining Vectors. This is calculated using Gaussian
     elimination.
 
-    :param \*vectors: The Vectors which define the span. Any vectors that are\
+    :param \*vectors: The vectors which define the span. Any vectors that are\
     linearly dependent on the others will be discarded.
-    :raises ValueError: if Vectors of different dimensions are provided."""
+    :raises ValueError: if vectors of different dimensions are provided."""
 
     def __init__(self, *vectors):
         self._vectors = {vectors[0]}
@@ -311,8 +311,8 @@ class VectorSpan:
 
 
     def dimension(self):
-        """The Vector space that the Span inhabits - any vectors of a different
-        Vector will never be ``in`` this Span.
+        """The vector space that the span inhabits - any vectors of a different
+        vector will never be ``in`` this span.
 
         :rtype: ``int``"""
 
