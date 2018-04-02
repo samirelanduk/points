@@ -134,7 +134,7 @@ def align_vectors_to_plane(axis, coaxis, vector, *vectors):
     :param int coaxis: The second axis of the plane to land on.
     :param Vector vector: The vector to align to the plane.
     :param \*vectors: The other vectors along for the ride."""
-    
+
     if axis not in (0, 1, 2):
         raise ValueError("{} is not a valid axis".format(axis))
     if coaxis not in (0, 1, 2) or coaxis == axis:

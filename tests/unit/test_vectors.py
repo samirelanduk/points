@@ -410,6 +410,20 @@ class VectorAngleWithTests(TestCase):
         self.assertAlmostEqual(vector1.angle_with(vector2), 1.0471, delta=0.0005)
 
 
+    @patch("points.vectors.Vector.magnitude")
+    @patch("points.vectors.Vector.dot")
+    def test_can_get_angle_between_vectors_in_degrees(self, mock_dot, mock_mag):
+        mock_dot.return_value = 1
+        mock_mag.return_value = 4
+        vector1 = Vector(7, 1)
+        vector2 = Mock(Vector)
+        vector2.magnitude.return_value = 0.5
+        vector2.length.return_value = 2
+        self.assertAlmostEqual(
+         vector1.angle_with(vector2, degrees=True), 60, delta=0.0005
+        )
+
+
     def test_angle_requires_vector(self):
         vector1 = Vector(-6, -8)
         with self.assertRaises(TypeError):

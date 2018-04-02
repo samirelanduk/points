@@ -84,6 +84,7 @@ class VectorTests(TestCase):
         v1, v2 = points.Vector(2, 5, -1), points.Vector(1, -3, -4)
         self.assertTrue(v1.distance_to(v2), 74)
         self.assertAlmostEqual(v1.angle_with(v2), 1.898, delta=0.005)
+        self.assertAlmostEqual(v1.angle_with(v2, degrees=True), 108.799, delta=0.005)
 
         # Vector span - one dimension
         v1, v2 = points.Vector(4), points.Vector(-3)

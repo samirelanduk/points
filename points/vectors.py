@@ -1,5 +1,6 @@
 """Contains the Vector class."""
 
+import math
 from math import sqrt, acos
 
 class Vector:
@@ -244,7 +245,7 @@ class Vector:
         return vector.magnitude()
 
 
-    def angle_with(self, other):
+    def angle_with(self, other, degrees=False):
         """Returns the angle between this vector and another, in radians.
 
         :param Vector other: The other Vector.
@@ -255,8 +256,8 @@ class Vector:
             raise TypeError("{} is not a Vector".format(other))
         if self.length() != other.length():
             raise ValueError("{} and {} not equal length".format(self, other))
-        return acos(self.dot(other) / (self.magnitude() * other.magnitude()))
-
+        angle = acos(self.dot(other) / (self.magnitude() * other.magnitude()))
+        return math.degrees(angle) if degrees else angle
 
 
 class VectorSpan:
