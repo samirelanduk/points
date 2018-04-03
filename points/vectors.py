@@ -1,7 +1,7 @@
 """Contains the Vector class."""
 
 import math
-from math import sqrt, acos
+from math import sqrt, acos, pi
 
 class Vector:
     """A Vector is a sequence of numbers. They can represent a point in space,
@@ -256,8 +256,11 @@ class Vector:
             raise TypeError("{} is not a Vector".format(other))
         if self.length() != other.length():
             raise ValueError("{} and {} not equal length".format(self, other))
-        angle = acos(self.dot(other) / (self.magnitude() * other.magnitude()))
-        return math.degrees(angle) if degrees else angle
+        if self.magnitude() == 0 or other.magnitude() == 0:
+            ang = pi / 4
+        else:
+            ang = acos(self.dot(other) / (self.magnitude() * other.magnitude()))
+        return math.degrees(ang) if degrees else ang
 
 
 class VectorSpan:

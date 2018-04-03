@@ -1,3 +1,4 @@
+import math
 from unittest import TestCase
 from unittest.mock import Mock, patch, MagicMock
 from points.vectors import Vector
@@ -412,6 +413,21 @@ class VectorAngleWithTests(TestCase):
 
     @patch("points.vectors.Vector.magnitude")
     @patch("points.vectors.Vector.dot")
+    def test_can_get_angle_between_vectors_when_zero(self, mock_dot, mock_mag):
+        mock_dot.return_value = 1
+        mock_mag.return_value = 0
+        vector1 = Vector(7, 1)
+        vector2 = Mock(Vector)
+        vector2.magnitude.return_value = 0.5
+        vector2.length.return_value = 2
+        self.assertAlmostEqual(vector1.angle_with(vector2), math.pi / 4, delta=0.0005)
+        vector2.magnitude.return_value = 0
+        mock_mag.return_value = 9
+        self.assertAlmostEqual(vector1.angle_with(vector2), math.pi / 4, delta=0.0005)
+
+
+    @patch("points.vectors.Vector.magnitude")
+    @patch("points.vectors.Vector.dot")
     def test_can_get_angle_between_vectors_in_degrees(self, mock_dot, mock_mag):
         mock_dot.return_value = 1
         mock_mag.return_value = 4
@@ -436,128 +452,3 @@ class VectorAngleWithTests(TestCase):
         vector2.length.return_value = 3
         with self.assertRaises(ValueError):
             vector1.angle_with(vector2)
-
-
-
-
-
-'''
-
-
-
-
-
-class VectorRotation(TestCase):
-
-    def setUp(self):
-        self.vector = Mock()
-        self.matrix = Mock()
-        self.matrix.__matmul__ = MagicMock()
-        self.matrix.__matmul__.return_value = self.vector
-
-
-    @patch("points.matrices.Matrix")
-    def test_can_do_2d_rotation(self, mock_matrix):
-        self.vector._values = [-4, 3]
-        mock_matrix.return_value = self.matrix
-        v = Vector(3, 4)
-        v.rotate(pi / 2)
-        matrix_args = mock_matrix.call_args_list[0][0]
-        self.assertAlmostEqual(matrix_args[0][0], 0, delta=0.005)
-        self.assertAlmostEqual(matrix_args[0][1], -1, delta=0.005)
-        self.assertAlmostEqual(matrix_args[1][0], 1, delta=0.005)
-        self.assertAlmostEqual(matrix_args[1][1], 0, delta=0.005)
-        self.matrix.__matmul__.assert_called_with(v)
-        self.assertEqual(v._values, [-4, 3])
-
-
-    @patch("points.matrices.Matrix")
-    def test_can_do_3d_rotation_x(self, mock_matrix):
-        self.vector._values = [-4, 3, 5]
-        mock_matrix.return_value = self.matrix
-        v = Vector(3, 4, 5)
-        v.rotate(pi / 2, "x")
-        matrix_args = mock_matrix.call_args_list[0][0]
-        self.assertAlmostEqual(matrix_args[0][0], 1, delta=0.005)
-        self.assertAlmostEqual(matrix_args[0][1], 0, delta=0.005)
-        self.assertAlmostEqual(matrix_args[0][2], 0, delta=0.005)
-        self.assertAlmostEqual(matrix_args[1][0], 0, delta=0.005)
-        self.assertAlmostEqual(matrix_args[1][1], 0, delta=0.005)
-        self.assertAlmostEqual(matrix_args[1][2], -1, delta=0.005)
-        self.assertAlmostEqual(matrix_args[2][0], 0, delta=0.005)
-        self.assertAlmostEqual(matrix_args[2][1], 1, delta=0.005)
-        self.assertAlmostEqual(matrix_args[2][2], 0, delta=0.005)
-        self.matrix.__matmul__.assert_called_with(v)
-        self.assertEqual(v._values, [-4, 3, 5])
-
-
-    @patch("points.matrices.Matrix")
-    def test_can_do_3d_rotation_y(self, mock_matrix):
-        self.vector._values = [-4, 3, 5]
-        mock_matrix.return_value = self.matrix
-        v = Vector(3, 4, 5)
-        v.rotate(pi / 2, "y")
-        matrix_args = mock_matrix.call_args_list[0][0]
-        self.assertAlmostEqual(matrix_args[0][0], 0, delta=0.005)
-        self.assertAlmostEqual(matrix_args[0][1], 0, delta=0.005)
-        self.assertAlmostEqual(matrix_args[0][2], 1, delta=0.005)
-        self.assertAlmostEqual(matrix_args[1][0], 0, delta=0.005)
-        self.assertAlmostEqual(matrix_args[1][1], 1, delta=0.005)
-        self.assertAlmostEqual(matrix_args[1][2], 0, delta=0.005)
-        self.assertAlmostEqual(matrix_args[2][0], -1, delta=0.005)
-        self.assertAlmostEqual(matrix_args[2][1], 0, delta=0.005)
-        self.assertAlmostEqual(matrix_args[2][2], 0, delta=0.005)
-        self.matrix.__matmul__.assert_called_with(v)
-        self.assertEqual(v._values, [-4, 3, 5])
-
-
-    @patch("points.matrices.Matrix")
-    def test_can_do_3d_rotation_z(self, mock_matrix):
-        self.vector._values = [-4, 3, 5]
-        mock_matrix.return_value = self.matrix
-        v = Vector(3, 4, 5)
-        v.rotate(pi / 2, "z")
-        matrix_args = mock_matrix.call_args_list[0][0]
-        self.assertAlmostEqual(matrix_args[0][0], 0, delta=0.005)
-        self.assertAlmostEqual(matrix_args[0][1], -1, delta=0.005)
-        self.assertAlmostEqual(matrix_args[0][2], 0, delta=0.005)
-        self.assertAlmostEqual(matrix_args[1][0], 1, delta=0.005)
-        self.assertAlmostEqual(matrix_args[1][1], 0, delta=0.005)
-        self.assertAlmostEqual(matrix_args[1][2], 0, delta=0.005)
-        self.assertAlmostEqual(matrix_args[2][0], 0, delta=0.005)
-        self.assertAlmostEqual(matrix_args[2][1], 0, delta=0.005)
-        self.assertAlmostEqual(matrix_args[2][2], 1, delta=0.005)
-        self.matrix.__matmul__.assert_called_with(v)
-        self.assertEqual(v._values, [-4, 3, 5])
-
-
-    def test_only_2_and_3_d_vectors_can_rotate(self):
-        vector = Vector(1)
-        with self.assertRaises(ValueError):
-            vector.rotate(pi)
-        vector = Vector(1, 2, 3, 4)
-        with self.assertRaises(ValueError):
-            vector.rotate(pi)
-
-
-    def test_axis_must_be_valid(self):
-        vector = Vector(1, 2, 3)
-        with self.assertRaises(ValueError):
-            vector.rotate(pi, "n")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-'''
