@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
  name="points",
- version="0.4.0",
+ version="0.4.1",
  description="A pure-Python geometry and linear algebra library",
  url="https://points.samireland.com",
  author="Sam Ireland",
